@@ -1,0 +1,29 @@
+.howItWorks {
+    padding: 5rem;
+    background-color: #ffffff;
+    text-align: center;
+  }
+  
+  .steps {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+  }
+  
+  .step {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 200px;
+    text-align: center;
+  }
+  
+  .stepNumber {
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  

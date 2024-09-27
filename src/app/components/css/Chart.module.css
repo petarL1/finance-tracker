@@ -1,0 +1,12 @@
+.chartSection {
+    padding: 5rem;
+    text-align: center;
+  }
+  
+  .chartContainer {
+    max-width: 800px;
+    margin: auto;
+    display: flex;
+  }  
+
+  

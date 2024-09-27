@@ -1,0 +1,135 @@
+/* Base Styles (for larger screens like desktop) */
+.footer {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logoSection,
+.linksSection,
+.socialSection {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 2rem;
+}
+
+.logoSection a{
+
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.logoSection a:hover {
+  color: #0088cc;
+}
+
+/* Align 'Follow Us' text and social icons to the center */
+.socialSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.socialSection h4 {
+  margin-bottom: 1rem;
+}
+
+.socialIcons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.socialIcons a {
+  color: white;
+  font-size: 1.5rem;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.socialIcons a:hover {
+  color: #0088cc;
+  transform: scale(1.1);
+}
+
+.logoSection p,
+.linksSection ul,
+.socialIcons {
+  margin-top: 1rem;
+}
+
+.linksSection ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.linksSection ul li {
+  margin-bottom: 0.5rem;
+}
+
+.linksSection ul li a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.linksSection ul li a:hover {
+  color: #0088cc;
+}
+
+.copyright {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* Media Queries */
+
+/* For tablets or devices with max width of 768px */
+@media (max-width: 768px) {
+  .footerContainer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .socialIcons {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}
+
+/* For mobile devices with max width of 480px */
+@media (max-width: 480px) {
+  .footerContainer {
+    padding: 0 1rem;
+  }
+
+  .logoSection p {
+    font-size: 0.9rem;
+  }
+
+  .linksSection ul li a {
+    font-size: 1rem;
+  }
+
+  .socialIcons a {
+    font-size: 1.2rem;
+  }
+
+  .copyright {
+    font-size: 0.7rem;
+  }
+}

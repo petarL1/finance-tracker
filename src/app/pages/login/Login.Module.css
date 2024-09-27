@@ -1,0 +1,102 @@
+/* Login.module.css */
+
+/* Container for login form */
+.loginContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+}
+
+/* Login form box */
+.loginBox {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Title */
+.title {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Error and success messages */
+.error {
+  color: #e63946;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.success {
+  color: #4caf50;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Login form */
+.loginForm {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label */
+.label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+/* Input fields */
+.input {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.buttonContainer{
+  align-items: center;
+  display: flex;
+}
+
+/* Submit button */
+.submitButton {
+  background-color: #005CB9;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.createAccount {
+  display: flex;
+  margin:auto;
+  margin-top: 10px;
+  background-color: #36A420;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  padding: 0.75rem;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.createAccount:hover {
+  background-color: #6bd855;
+}
+
+
+.submitButton:hover {
+  background-color: #6098cf;
+}

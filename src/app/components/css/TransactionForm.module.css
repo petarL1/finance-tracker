@@ -1,0 +1,225 @@
+/* Container for the form and transaction list */
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Form styling */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  flex: 1;
+}
+
+/* Form groups and fields */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.transactionTypeContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.transactionTypeLabel {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hiddenRadio {
+  display: none;
+}
+
+.squareButton {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #0070f3;
+  border-radius: 8px;
+  background-color: #fff;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.transactionTypeLabel.active .squareButton {
+  background-color: #0070f3;
+  border-color: #0070f3;
+}
+
+.transactionTypeLabel.active .squareButton::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+}
+
+.formLabel {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.formInput, 
+.formSelect {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.submitButton {
+  padding: 12px 20px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.submitButton:hover {
+  background-color: #005bb5;
+}
+
+.formError {
+  color: red;
+  font-size: 12px;
+}
+
+/* Transaction list and pagination */
+.right {
+  max-width: 350px;
+  border-left: 1px solid #ddd;
+  padding:20px;
+}
+.right h2{
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.transactionList {
+  margin-top: 20px;
+  max-width: 200px;
+}
+
+.transactionItem {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.pagination {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  border: 1px solid #0070f3;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.pagination button:hover {
+  background-color: #0070f3;
+  color: white;
+}
+
+.pagination .activePage {
+  background-color: #0070f3;
+  color: white;
+}
+
+.transactionItem {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  margin-bottom: 10px; 
+}
+
+.transactionDetails {
+  display: flex;
+  flex-direction: row; /* Align items horizontally */
+  flex-wrap: wrap; /* Allow items to wrap if necessary */
+}
+
+.transactionDate,
+.transactionDescription,
+.transactionButtons {
+  flex: 1 1 100%; /* Take full width and break to new line */
+  word-break: break-word; /* Ensure long words break appropriately */
+}
+
+.transactionAmount {
+  flex: 0 1 auto; /* Don't wrap and take the necessary space */
+}
+
+.expense {
+  color: rgb(255, 0, 0);
+}
+
+.income {
+  color: green;
+}
+
+.editButton{
+  border:0;
+  background-color: white;
+  color:blue;
+  padding: 0 5px;
+}
+
+.removeButton{
+  border:0;
+  background-color: white;
+  color: red;
+  padding: 0 5px;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .transactionTypeContainer {
+    flex-direction: row;
+  }
+
+  .formFields {
+    flex-direction: column;
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+
+  .right {
+    max-width: 100%;
+    border-top: 1px solid #ddd;
+    border-left: 0;
+  }
+
+  .transactionList {
+    margin: 0 auto; /* Center the transaction list */
+  }
+}
