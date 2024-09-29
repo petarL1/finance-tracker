@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = process.env.JWT_SECRET || 'mysecretkey';
 
-export const authenticateToken = (req: NextApiRequest, res: NextApiResponse) => {
+export const authenticateToken = (req: NextApiRequest, res: NextApiResponse, p0: () => void) => {
   console.log('Cookies:', req.cookies); // Log cookies here
 
   const token = req.cookies.token;

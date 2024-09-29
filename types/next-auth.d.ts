@@ -2,9 +2,9 @@
 
 import { JwtPayload } from 'jsonwebtoken';
 import { NextApiRequest } from 'next';
-import NextAuth, { DefaultUser } from "next-auth";
+import NextAuth, { DefaultUser } from 'next-auth';
 
-declare module "next-auth" {
+declare module 'next-auth' {
   // Extend the User interface to include the username property
   interface User extends DefaultUser {
     username: string; // Add your custom properties here
@@ -21,9 +21,12 @@ declare module "next-auth" {
   }
 }
 
-// Define the type for the user attached to the request
+// Extend NextApiRequest to include user property
 declare module 'next' {
   interface NextApiRequest {
-    user?: string | JwtPayload; // Or you can define a custom User type if needed
+    user?: { // Define the shape of your user object
+      userId: string;
+      username: string;
+    } | JwtPayload; // You can also keep the JwtPayload type if necessary
   }
 }

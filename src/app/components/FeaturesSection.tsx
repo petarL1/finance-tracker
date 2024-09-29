@@ -10,12 +10,12 @@ const features = [
   {
     title: 'Charts',
     description: 'See your progress over time with detailed visual representations of your financial data.',
-    image: 'charts.png',
+    //image: 'charts.png',
   },
   {
     title: 'Tips and Educational Content',
     description: 'Improve your financial literacy with the best budgeting and saving tips.',
-    image: 'tips.png',
+    //image: 'tips.png',
   },
 ];
 

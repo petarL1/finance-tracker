@@ -8,7 +8,7 @@ let db: any;
 async function connectToDatabase() {
   if (!db) {
     await client.connect();
-    db = client.db('users');
+    db = client.db('users'); // Assuming you keep the database name as 'users'
   }
   return db;
 }
@@ -21,21 +21,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ message: 'Username and password are required.' });
     }
 
-    const db = await connectToDatabase();
-    const existingUser = await db.collection('users').findOne({ username });
+    try {
+      const db = await connectToDatabase();
+      const existingUser = await db.collection('users').findOne({ username });
 
-    if (existingUser) {
-      return res.status(400).json({ message: 'Username already exists.' });
+      if (existingUser) {
+        return res.status(400).json({ message: 'Username already exists.' });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const newUser = {
+        username,
+        password: hashedPassword,
+      };
+
+      const result = await db.collection('users').insertOne(newUser);
+
+      res.status(201).json({ message: 'User registered successfully.', userId: result.insertedId });
+    } catch (error) {
+      console.error('Error registering user:', error);
+      res.status(500).json({ message: 'Internal server error.' });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    await db.collection('users').insertOne({
-      username,
-      password: hashedPassword,
-    });
-
-    res.status(201).json({ message: 'User registered successfully.' });
   } else {
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);

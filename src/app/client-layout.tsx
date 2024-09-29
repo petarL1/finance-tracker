@@ -7,7 +7,6 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
-import AuthStatus from './components/AuthStatus';
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -22,11 +21,12 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }> {
 
   componentDidCatch(error: Error) {
     console.error('Error caught in ErrorBoundary:', error);
+    // Optionally log error to an external service here
   }
 
   render() {
     if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
+      return <h1 className='errorHeading'>Something went wrong.</h1>;
     }
 
     return this.props.children; 

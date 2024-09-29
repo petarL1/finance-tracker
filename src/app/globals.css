@@ -30,3 +30,8 @@ main {
 .body-wrapper{
   margin: 0 4rem;
 }
+
+.errorHeading{
+  flex:1;
+  text-align: center;
+}

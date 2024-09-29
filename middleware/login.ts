@@ -16,5 +16,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/pages/profile', '/pages/dashboard'], // Add paths to protect
+  matcher: ['/pages/profile'],
 };

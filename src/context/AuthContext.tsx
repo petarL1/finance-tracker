@@ -27,12 +27,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const checkToken = () => {
       const token = localStorage.getItem('token'); // Get token from localStorage
-      console.log('Token from localStorage:', token);
 
       if (token) {
         try {
           const decoded = jwtDecode<UserSession>(token); // Decode without verifying
-          console.log('Decoded token:', decoded);
 
           // Check token expiration
           if (decoded.exp * 1000 > Date.now()) {

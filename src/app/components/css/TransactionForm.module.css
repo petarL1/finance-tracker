@@ -3,6 +3,7 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  flex-wrap: wrap; /* Allow wrapping for small screens */
 }
 
 /* Form styling */
@@ -21,9 +22,15 @@
   gap: 20px;
 }
 
+.hiddenRadio {
+  display: none;
+}
+
+/* Align buttons horizontally and style active state */
 .transactionTypeContainer {
   display: flex;
-  gap: 20px;
+  gap: 10px; /* Adjust gap as needed */
+  justify-content: center; /* Center buttons */
 }
 
 .transactionTypeLabel {
@@ -31,10 +38,7 @@
   align-items: center;
   font-size: 16px;
   cursor: pointer;
-}
-
-.hiddenRadio {
-  display: none;
+  position: relative; /* Added for pseudo-elements */
 }
 
 .squareButton {
@@ -42,8 +46,6 @@
   height: 40px;
   border: 2px solid #0070f3;
   border-radius: 8px;
-  background-color: #fff;
-  margin-right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,14 +53,16 @@
 }
 
 .transactionTypeLabel.active .squareButton {
-  background-color: #0070f3;
-  border-color: #0070f3;
+  background-color: #0070f3; /* Fill blue when active */
+  border-color: #0070f3; /* Match border color */
 }
 
 .transactionTypeLabel.active .squareButton::after {
-  content: '';
+  content: ''; /* Optional: to indicate selection visually */
   width: 20px;
   height: 20px;
+  background-color: #0070f3; /* Fill blue when active */
+  border-radius: 50%; /* Optional: for a rounded effect */
 }
 
 .formFields {
@@ -77,7 +81,7 @@
   font-size: 16px;
 }
 
-.formInput, 
+.formInput,
 .formSelect {
   padding: 10px;
   border: 1px solid #ccc;
@@ -104,12 +108,13 @@
 }
 
 /* Transaction list and pagination */
-.right {
+.transactionListWrapper {
   max-width: 350px;
   border-left: 1px solid #ddd;
-  padding:20px;
+  padding: 20px;
 }
-.right h2{
+
+.transactionListWrapper h2 {
   font-size: 1.5rem;
   text-align: center;
 }
@@ -153,7 +158,7 @@
 .transactionItem {
   display: flex;
   flex-direction: column; /* Stack items vertically */
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 .transactionDetails {
@@ -181,15 +186,15 @@
   color: green;
 }
 
-.editButton{
-  border:0;
+.editButton {
+  border: 0;
   background-color: white;
-  color:blue;
+  color: blue;
   padding: 0 5px;
 }
 
-.removeButton{
-  border:0;
+.removeButton {
+  border: 0;
   background-color: white;
   color: red;
   padding: 0 5px;
@@ -199,6 +204,7 @@
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
+    gap: 10px; /* Adjust gap for smaller screens */
   }
 
   .transactionTypeContainer {
@@ -213,7 +219,7 @@
     width: 100%;
   }
 
-  .right {
+  .transactionListWrapper {
     max-width: 100%;
     border-top: 1px solid #ddd;
     border-left: 0;
