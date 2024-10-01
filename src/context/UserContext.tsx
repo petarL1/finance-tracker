@@ -1,10 +1,10 @@
-// context/UserContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { connectToDatabase } from '../lib/mongodb'; // Adjust the import path if necessary
 import { User } from '../lib/types';
 
 interface UserContextType {
   user: User | null;
+  loading: boolean; // Add loading state
 }
 
 interface UserProviderProps {
@@ -15,6 +15,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Initialize loading state
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,6 +30,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
       } catch (error) {
         console.error('Failed to fetch user:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -36,7 +39,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user }}>
+    <UserContext.Provider value={{ user, loading }}>
       {children}
     </UserContext.Provider>
   );

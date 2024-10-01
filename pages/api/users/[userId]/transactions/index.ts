@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import mongoose from 'mongoose';
-import Transaction from '../../../../src/models/Transaction';
-import { connectToDatabase } from '../../../../src/lib/mongodb';
+import Transaction from '../../../../../src/models/Transaction';
+import { connectToDatabase } from '../../../../../src/lib/mongodb';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { userId } = req.query;
+  const page = parseInt(req.query.page as string) || 1; // Default to 1
+  const limit = parseInt(req.query.limit as string) || 10; // Default to 10
 
   await connectToDatabase();
 

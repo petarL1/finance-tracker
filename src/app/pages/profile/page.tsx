@@ -1,27 +1,40 @@
-'use client';
+'use client'
 
 import React, { useState, useEffect } from 'react';
 import styles from './Profile.module.css';
 import TransactionForm from '../../components/TransactionForm';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { jwtDecode } from 'jwt-decode'; // Fix for jwtDecode import
+import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { format, parseISO, isThisYear } from 'date-fns';
+import BalanceChart from '../../components/BalanceChart';
+import CategoryChart from '../../components/CategoryChart';
 
 interface Transaction {
-  _id: string; // Ensure this is the MongoDB-generated ID
-  userId: string; // The ID of the user associated with the transaction
-  date: string; // Format: YYYY-MM-DD or similar
+  _id: string;
+  userId: string;
+  date: string;
   description: string;
   amount: number;
   category: string;
-  type: 'Expense' | 'Income';
+  type: 'expense' | 'income';
 }
 
 interface UserSession {
   userId: string;
   username: string;
 }
+
+interface BalanceDataPoint {
+  date: string; // Date in YYYY-MM-DD format
+  balance: number; // Balance amount for that date
+}
+
+const formatTransactionDate = (dateString: string) => {
+  const date = parseISO(dateString);
+  return isThisYear(date) ? format(date, 'MMM d') : format(date, 'MMM d, yyyy');
+};
 
 const Profile: React.FC = () => {
   const { logout } = useAuth();
@@ -30,9 +43,15 @@ const Profile: React.FC = () => {
   const [balance, setBalance] = useState<number>(0);
   const [user, setUser] = useState<UserSession | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // For error handling
+  const [error, setError] = useState<string | null>(null);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [transactionsPerPage] = useState<number>(5);
+  const [paginatedTransactions, setPaginatedTransactions] = useState<Transaction[]>([]);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc'); // State for sort order
+  const [balanceData, setBalanceData] = useState<BalanceDataPoint[]>([]); // Specify the type here
 
-  // Fetch the user from the token
+
   const fetchUser = () => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -51,142 +70,226 @@ const Profile: React.FC = () => {
   const handleLogout = () => {
     logout();
     setUser(null);
-    router.push('/login'); // Adjust path if necessary
+    router.push('/pages/login');
   };
 
   useEffect(() => {
-    fetchUser(); // Fetch the user when the component mounts
-
-    return () => {
-      // Cleanup when the component unmounts
-      setUser(null);
-      setTransactions([]);
-      setBalance(0);
-    };
+    fetchUser();
   }, []);
 
   useEffect(() => {
-    const fetchUserById = async () => {
-      if (user) {
-        try {
-          const response = await axios.get(`/api/users/${user.userId}`); // Using string userId from JWT
-        } catch (error) {
-          console.error('Failed to fetch user:', error);
-        }
-      }
-    };
-
-    fetchUserById(); // Call the function to fetch user data
-  }, [user]);
-  
-  useEffect(() => {
-    let isMounted = true; // Add a mounted flag
     const fetchTransactions = async () => {
-      if (!user) return; // Prevents fetching transactions if user is null
+      if (!user) return;
       setLoading(true);
-      setError(null); // Reset error state
-  
+      setError(null);
+
       try {
         const response = await axios.get(`/api/users/${user.userId}/transactions`);
-  
-        if (response.status === 200 && isMounted) {
-          const fetchedTransactions = Array.isArray(response.data.transactions) ? response.data.transactions : [];
-          setTransactions(fetchedTransactions); // Update state if component is still mounted
-          calculateBalance(fetchedTransactions); // Calculate balance with fetched transactions
-        } else {
-          console.error('Unexpected response status:', response.status);
-          if (isMounted) {
-            setError('Failed to fetch transactions');
-          }
-        }
+        const allTransactions = response.data.transactions || [];
+
+        const sortedTransactions = allTransactions.sort((a, b) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+
+        setTransactions(sortedTransactions); // Set sorted transactions
+        calculateBalance(sortedTransactions); // Calculate balance based on all fetched transactions
+        paginateTransactions(sortedTransactions); // Calculate balance based on all fetched transactions
       } catch (error) {
-        if (error.response) {
-          console.error('Error response data:', error.response.data); // Log error response data
-        } else {
-          console.error('Failed to fetch transactions:', error); // Log other errors
-        }
-        if (isMounted) {
-          setError('Failed to fetch transactions. Please try again later.');
-          setTransactions([]); // Reset transactions in case of error
-        }
+        setError('Failed to fetch transactions.');
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     };
 
-    fetchTransactions(); // Fetch transactions only if user is set
-
-    return () => {
-      isMounted = false; // Cleanup function to set mounted flag to false
-    };
+    fetchTransactions();
   }, [user]);
 
   const calculateBalance = (transactions: Transaction[] = []) => {
     const initialBalance = transactions.reduce((total, transaction) => {
-      return total + (transaction.type === 'Income' ? transaction.amount : -transaction.amount);
+      const amount = transaction.amount;
+      return total + (transaction.type === 'income' ? amount : -amount);
     }, 0);
+
     setBalance(initialBalance);
   };
 
+  // Pagination
+  const paginateTransactions = (allTransactions: Transaction[]) => {
+    const startIndex = (currentPage - 1) * transactionsPerPage;
+    const endIndex = startIndex + transactionsPerPage;
+    setPaginatedTransactions(allTransactions.slice(startIndex, endIndex));
+  };
+
+  // Sorting function
+  const sortTransactions = (transactions: Transaction[], order: 'asc' | 'desc') => {
+    return transactions.sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return order === 'asc' ? dateA - dateB : dateB - dateA;
+    });
+  };
+
+  const handleSortToggle = () => {
+    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortOrder(newSortOrder);
+    const sortedTransactions = sortTransactions([...transactions], newSortOrder); // Sort transactions in local state
+    setTransactions(sortedTransactions); // Update transactions state immediately
+    paginateTransactions(sortedTransactions); // Update pagination
+  };
+
+  useEffect(() => {
+    paginateTransactions(transactions); // Update pagination when transactions change
+  }, [currentPage, transactions]);
+
   const saveTransaction = async (transaction: Omit<Transaction, '_id'>) => {
-    if (!user) return; // Prevents saving if user is null
+    if (!user) return;
+
     try {
-      const transactionWithUserId = { ...transaction, userId: user.userId }; // Add userId to the transaction
-      const response = await axios.post(`/api/users/${user.userId}/transactions`, transactionWithUserId);
-      handleAddTransaction(response.data);
+      const response = await axios.post(`/api/users/${user.userId}/add`, transaction);
+      const newTransaction = response.data;
+
+      // Update transactions state immediately and sort
+      const updatedTransactions = [...transactions, newTransaction].sort((a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      
+      setTransactions(updatedTransactions);
+      calculateBalance(updatedTransactions);
+      paginateTransactions(updatedTransactions); // Recalculate pagination
+      setEditingTransaction(null); // Reset the editing transaction
     } catch (error) {
       console.error('Failed to save transaction:', error);
     }
   };
 
-  const handleAddTransaction = (transaction: Transaction) => {
-    setTransactions((prev) => [...prev, transaction]);
-    calculateBalance([...transactions, transaction]);
-  };
+  const updateTransaction = async (transaction: Transaction) => {
+    if (!user) return;
 
-  const handleRemoveTransaction = async (index: number) => {
-    const transactionToRemove = transactions[index];
     try {
-      await axios.delete(`/api/transactions/${transactionToRemove._id}`);
-      handleRemoveTransactionLocal(index);
-    } catch (error) {
-      console.error('Failed to remove transaction:', error);
-    }
-  };
+      const response = await axios.put(`/api/users/${user.userId}/transactions/${transaction._id}`, transaction);
+      const updatedTransaction = response.data;
 
-  const handleEditTransaction = async (index: number, updatedTransaction: Transaction) => {
-    const oldTransaction = transactions[index];
-    try {
-      const response = await axios.put(`/api/transactions/${oldTransaction._id}`, updatedTransaction);
-      handleEditTransactionLocal(index, response.data);
+      // Update transactions state immediately and sort
+      const updatedTransactions = transactions.map(trans => 
+        trans._id === updatedTransaction._id ? updatedTransaction : trans
+      ).sort((a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+
+      setTransactions(updatedTransactions);
+      calculateBalance(updatedTransactions); // Update balance using the updated transactions
+      paginateTransactions(updatedTransactions); // Update pagination after editing
+      setEditingTransaction(null); // Reset the editing transaction
     } catch (error) {
       console.error('Failed to update transaction:', error);
     }
   };
 
-  const handleRemoveTransactionLocal = (index: number) => {
-    setTransactions((prevTransactions) => {
-      const newTransactions = prevTransactions.filter((_, i) => i !== index);
-      calculateBalance(newTransactions);
-      return newTransactions;
-    });
-  };
+  const handleRemoveTransaction = async (id: string) => {
+    try {
+      const transactionToRemove = transactions.find(transaction => transaction._id === id);
 
-  const handleEditTransactionLocal = (index: number, updatedTransaction: Transaction) => {
-    setTransactions((prevTransactions) => {
-      const updatedTransactions = [...prevTransactions];
-      updatedTransactions[index] = updatedTransaction;
+      if (!transactionToRemove) {
+        console.error('Transaction not found in state:', id);
+        return;
+      }
+
+      await axios.delete(`/api/users/${user?.userId}/transactions/${id}`);
+
+      // Update transactions state immediately and sort
+      const updatedTransactions = transactions.filter(transaction => transaction._id !== id)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      setTransactions(updatedTransactions);
+
+      // Recalculate balance based on the updated transactions
       calculateBalance(updatedTransactions);
-      return updatedTransactions;
-    });
+      paginateTransactions(updatedTransactions); // Recalculate pagination
+
+    } catch (error) {
+      console.error('Failed to remove transaction:', error);
+    }
   };
 
+  const handleEditTransaction = (transaction: Transaction) => {
+    setEditingTransaction(transaction);
+  };
+
+  // Render pagination controls
+  const totalPages = Math.ceil(transactions.length / transactionsPerPage);
+  const renderPagination = () => {
+    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    return (
+      <div className={styles.pagination}>
+        {pages.map((page) => (
+          <button 
+            key={page} 
+            onClick={() => setCurrentPage(page)} 
+            className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    const fetchBalanceData = async () => {
+      if (!user) return;
+  
+      try {
+        const response = await axios.get(`/api/users/${user.userId}/transactions`);
+        const allTransactions = response.data.transactions || [];
+  
+        // Prepare balance data
+        const balanceMap: Record<string, number> = {};
+        allTransactions.forEach(transaction => {
+          const date = new Date(transaction.date).toISOString().split('T')[0]; // Get YYYY-MM-DD
+          if (!balanceMap[date]) {
+            balanceMap[date] = 0;
+          }
+          balanceMap[date] += transaction.type === 'income' ? transaction.amount : -transaction.amount;
+        });
+  
+        // Convert the balanceMap to an array and calculate cumulative balance
+        const balanceArray = Object.keys(balanceMap).map(date => ({
+          date,
+          balance: balanceMap[date]
+        })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  
+        // Calculate running total balance
+        let runningBalance = 0;
+        const runningBalanceData = balanceArray.map(item => {
+          runningBalance += item.balance; // Update running total
+          return {
+            date: item.date,
+            balance: runningBalance // Store cumulative balance
+          };
+        });
+  
+        setBalanceData(runningBalanceData); // Update the state with cumulative balance data
+      } catch (error) {
+        setError('Failed to fetch balance data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchBalanceData();
+  }, [user]);
+  
+  
+  
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Welcome to Your Finance Tracker</h1>
-      <button className={styles.logoutButton} onClick={handleLogout}>Logout</button>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Welcome, {user?.username}</h2>
+        <button className={styles.logoutButton} onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
       <div className={styles.dashboard}>
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Balance</h2>
@@ -199,28 +302,61 @@ const Profile: React.FC = () => {
             <>
               <TransactionForm
                 userId={user?.userId || ''}
-                onAddTransaction={saveTransaction}
-                onRemoveTransaction={handleRemoveTransaction}
-                onEditTransaction={handleEditTransaction}
+                onAddTransaction={editingTransaction ? updateTransaction : saveTransaction}
+                onUpdateBalance={() => {}}
+                initialTransaction={editingTransaction || undefined} // Pass the transaction to edit
               />
               <div className={styles.transactionList}>
-                {transactions.length === 0 ? (
+                <div className={styles.sortContainer}>
+                  <button onClick={handleSortToggle} className={styles.sortButton}>
+                    Sort by Date {sortOrder === 'asc' ? '↑' : '↓'}
+                  </button>
+                </div>
+                {paginatedTransactions.length === 0 ? (
                   <p>No transactions found.</p>
                 ) : (
-                  transactions.map((transaction, index) => (
-                    <div key={transaction._id} className={styles.transactionItem}>
-                      <p>{transaction.date}: {transaction.description} - ${transaction.amount} ({transaction.type})</p>
-                      <button onClick={() => handleRemoveTransaction(index)}>Remove</button>
-                    </div>
-                  ))
+                  <>
+                    {paginatedTransactions.map((transaction) => (
+                      <div key={transaction._id} className={styles.transactionItem}>
+                        <div className={styles.transactionDetails}>
+                          <p>
+                            {formatTransactionDate(transaction.date)}: {transaction.description}
+                            <br />
+                            <span className={`${styles.amount} ${transaction.type === 'income' ? styles.income : styles.expense}`}>
+                              {transaction.type === 'income' ? '+' : '-'}${transaction.amount}
+                            </span>
+                            <span className={styles.category}> - Category: {transaction.category}</span>
+                          </p>
+                        </div>
+                        <div className={styles.buttonGroup}>
+                          <button onClick={() => handleEditTransaction(transaction)} className={styles.editButton}></button>
+                          <button onClick={() => handleRemoveTransaction(transaction._id)} className={styles.deleteButton}></button>
+                        </div>
+                      </div>
+                    ))}
+                    {/* Render placeholders for empty transactions */}
+                    {Array.from({ length: 5 - paginatedTransactions.length }).map((_, index) => (
+                      <div key={`placeholder-${index}`} className={`${styles.transactionItem} ${styles.placeholder}`} />
+                    ))}
+                  </>
                 )}
               </div>
+  
+              {renderPagination()}
             </>
           )}
         </div>
       </div>
+      <section className={styles.chartsWrapper}><h2 className={styles.chartsTitle}>View your progress over time!</h2>
+      <div>
+       <BalanceChart data={balanceData}/>
+      </div>
+      <div>
+      <CategoryChart data={transactions}/>
+    </div>
+    </section>
     </div>
   );
-};
+}  
 
 export default Profile;

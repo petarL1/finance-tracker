@@ -3,7 +3,12 @@ import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = process.env.JWT_SECRET || 'mysecretkey';
 
-export const authenticateToken = (req: NextApiRequest, res: NextApiResponse, p0: () => void) => {
+// Extend NextApiRequest to include user
+interface AuthenticatedRequest extends NextApiRequest {
+  user?: { userId: string; username: string };
+}
+
+export const authenticateToken = (req: AuthenticatedRequest, res: NextApiResponse, next: () => void) => {
   console.log('Cookies:', req.cookies); // Log cookies here
 
   const token = req.cookies.token;
@@ -20,8 +25,7 @@ export const authenticateToken = (req: NextApiRequest, res: NextApiResponse, p0:
     // Cast user to a specific type if you have one
     req.user = { userId: (user as any).userId, username: (user as any).username };
 
-    // Instead of calling next(), you should return the response here
-    // For example, you can call the intended handler or just return success
-    res.status(200).json({ message: 'Authenticated successfully', user: req.user });
+    // Call next() to pass control to the next middleware or route handler
+    next();
   });
 };

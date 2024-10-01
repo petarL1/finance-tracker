@@ -15,22 +15,40 @@
   flex: 1;
 }
 
-/* Form groups and fields */
-.formGroup {
+.formFields {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
-.hiddenRadio {
-  display: none;
+.formField {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Align buttons horizontally and style active state */
+.formLabel {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+/* Inputs styling */
+.formInput, .formSelect {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 .transactionTypeContainer {
   display: flex;
-  gap: 10px; /* Adjust gap as needed */
-  justify-content: center; /* Center buttons */
+  gap: 15px; 
+  justify-content: center; 
+  flex-direction: row!important;
 }
 
 .transactionTypeLabel {
@@ -39,6 +57,7 @@
   font-size: 16px;
   cursor: pointer;
   position: relative; /* Added for pseudo-elements */
+  gap:7px;
 }
 
 .squareButton {
@@ -47,8 +66,6 @@
   border: 2px solid #0070f3;
   border-radius: 8px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   transition: background-color 0.3s, border-color 0.3s;
 }
 
@@ -56,14 +73,11 @@
   background-color: #0070f3; /* Fill blue when active */
   border-color: #0070f3; /* Match border color */
 }
-
-.transactionTypeLabel.active .squareButton::after {
-  content: ''; /* Optional: to indicate selection visually */
-  width: 20px;
-  height: 20px;
-  background-color: #0070f3; /* Fill blue when active */
-  border-radius: 50%; /* Optional: for a rounded effect */
+/* Hide the original radio button */
+.hiddenRadio {
+  display: none;
 }
+
 
 .formFields {
   display: flex;
@@ -88,26 +102,6 @@
   border-radius: 4px;
 }
 
-.submitButton {
-  padding: 12px 20px;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.submitButton:hover {
-  background-color: #005bb5;
-}
-
-.formError {
-  color: red;
-  font-size: 12px;
-}
-
-/* Transaction list and pagination */
 .transactionListWrapper {
   max-width: 350px;
   border-left: 1px solid #ddd;
@@ -129,76 +123,38 @@
   border-bottom: 1px solid #ddd;
 }
 
-.pagination {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  gap: 7px;
+.error {
+  color: #d9534f;
+  font-size: 14px;
+  margin-top: 8px;
 }
 
-.pagination button {
-  padding: 5px 10px;
-  border: 1px solid #0070f3;
-  border-radius: 4px;
-  background-color: #fff;
-  cursor: pointer;
+.buttonContainer {
+  display: flex;
+}
+
+.submitButton {
+  padding: 12px 20px;
+  background-color: #28a745;
+  color: #fff;
   font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.pagination button:hover {
-  background-color: #0070f3;
-  color: white;
+.submitButton:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
 }
 
-.pagination .activePage {
-  background-color: #0070f3;
-  color: white;
+.submitButton:active {
+  background-color: #1e7e34;
+  transform: translateY(0);
 }
 
-.transactionItem {
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  margin-bottom: 10px;
-}
-
-.transactionDetails {
-  display: flex;
-  flex-direction: row; /* Align items horizontally */
-  flex-wrap: wrap; /* Allow items to wrap if necessary */
-}
-
-.transactionDate,
-.transactionDescription,
-.transactionButtons {
-  flex: 1 1 100%; /* Take full width and break to new line */
-  word-break: break-word; /* Ensure long words break appropriately */
-}
-
-.transactionAmount {
-  flex: 0 1 auto; /* Don't wrap and take the necessary space */
-}
-
-.expense {
-  color: rgb(255, 0, 0);
-}
-
-.income {
-  color: green;
-}
-
-.editButton {
-  border: 0;
-  background-color: white;
-  color: blue;
-  padding: 0 5px;
-}
-
-.removeButton {
-  border: 0;
-  background-color: white;
-  color: red;
-  padding: 0 5px;
-}
 
 /* Media Queries */
 @media (max-width: 768px) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './css/TransactionForm.module.css';
 
 interface Transaction {
@@ -7,120 +7,91 @@ interface Transaction {
   description: string;
   amount: number;
   category: string;
-  type: 'Expense' | 'Income';
+  type: 'expense' | 'income'; // Keep type as 'expense' | 'income'
 }
 
 interface TransactionFormProps {
   userId: string; // Pass the logged-in user's ID
-  onAddTransaction: (transaction: Omit<Transaction, "_id">) => Promise<void>;
-  onRemoveTransaction: (index: number) => Promise<void>;
-  onEditTransaction: (index: number, updatedTransaction: Transaction) => Promise<void>;
+  onAddTransaction: (transaction: Omit<Transaction, "_id">) => Promise<void>; // Keep this prop
+  onUpdateBalance: (amount: number) => void; // Add prop for updating balance
+  initialTransaction?: Transaction; // Add the initialTransaction prop
 }
 
 const expenseCategories = ["Food", "Utilities", "Entertainment", "Healthcare"];
 const incomeCategories = ["Salary", "Freelancing", "Investments", "Gifts"];
 
-const TransactionForm: React.FC<TransactionFormProps> = ({ userId, onAddTransaction, onRemoveTransaction, onEditTransaction }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [date, setDate] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [amount, setAmount] = useState<number | ''>('');
-  const [category, setCategory] = useState<string>(expenseCategories[0]);
-  const [type, setType] = useState<'Expense' | 'Income'>('Expense');
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [fetchError, setFetchError] = useState<string | null>(null);
+const TransactionForm: React.FC<TransactionFormProps> = ({
+  userId,
+  onAddTransaction,
+  onUpdateBalance,
+  initialTransaction // Destructure initialTransaction
+}) => {
+  // State initializations
+  const [date, setDate] = useState<string>(initialTransaction?.date || '');
+  const [description, setDescription] = useState<string>(initialTransaction?.description || '');
+  const [amount, setAmount] = useState<number | ''>(initialTransaction?.amount || '');
+  const [category, setCategory] = useState<string>(
+    initialTransaction?.category || expenseCategories[0]
+  );
+  const [type, setType] = useState<'expense' | 'income'>(
+    initialTransaction?.type || 'expense'
+  );
+  const [error, setError] = useState<string>(''); // Error state
 
-  // Fetch transactions on mount or when userId changes
+  // Effect to reset form fields when initialTransaction changes
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await fetch(`/api/users/${userId}/transactions`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch transactions');
-        }
-        const data = await response.json();
-        setTransactions(data); // Update transactions state
-      } catch (error) {
-        console.error(error);
-        setFetchError(error.message);
-      }
-    };
+    if (initialTransaction) {
+      setDate(new Date(initialTransaction.date).toISOString().split('T')[0]); // Format date to 'YYYY-MM-DD'
+      setDescription(initialTransaction.description);
+      setAmount(initialTransaction.amount);
+      setCategory(initialTransaction.category);
+      setType(initialTransaction.type);
+    } else {
+      resetForm(); // Reset to default values if no initialTransaction
+    }
+  }, [initialTransaction]);
 
-    fetchTransactions();
-  }, [userId]);
+  const handleTypeChange = (newType: 'expense' | 'income') => {
+    setType(newType);
+    // Adjust category based on new type
+    if (newType === 'expense') {
+      setCategory(expenseCategories[0]); // Default to first expense category
+    } else {
+      setCategory(incomeCategories[0]); // Default to first income category
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const newErrors: { [key: string]: string } = {};
-    
-    // Validate form inputs
-    if (!date) newErrors.date = 'Date is required';
-    if (amount === '' || isNaN(Number(amount))) newErrors.amount = 'Amount must be a number';
-    if (description.length > 50) newErrors.description = 'Description must be 50 characters or less';
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return; // Stop submission if errors exist
+    // Basic validation
+    if (!date || !description || amount === '' || amount < 0) {
+      setError('Please fill out all fields with valid inputs.'); // Set error message
+      return;
     }
 
-    setErrors({}); // Clear errors
+    if (description.length > 50) {
+      return;
+    }
 
-    const transaction: Transaction = {
+    const transaction = {
+      _id: initialTransaction?._id, // Include the _id for editing
       date,
       description,
-      amount: Number(amount),
+      amount,
       category,
       type,
     };
 
     try {
-      if (editIndex !== null) {
-        // Update existing transaction
-        const id = transactions[editIndex]._id; // Use existing transaction ID
-        const response = await fetch(`/api/users/${userId}/transactions/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(transaction),
-        });
-        if (!response.ok) throw new Error('Failed to update transaction');
-
-        const updatedTransactions = [...transactions];
-        updatedTransactions[editIndex] = { ...transaction, _id: id }; // Retain the ID
-        setTransactions(updatedTransactions); // Update state with modified transactions
-      } else {
-        // Add new transaction
-        const response = await fetch(`/api/users/${userId}/transactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(transaction),
-        });
-        if (!response.ok) throw new Error('Failed to add transaction');
-
-        const newTransaction = await response.json();
-        setTransactions((prev) => [...prev, newTransaction]); // Append new transaction to state
-      }
-    } catch (error) {
-      console.error("Error saving transaction:", error);
-      setFetchError(error.message);
-    }
-
-    resetForm(); // Reset form fields
-  };
-
-  const handleRemove = async (index: number) => {
-    const id = transactions[index]._id; // Use existing transaction ID
-    try {
-      const response = await fetch(`/api/users/${userId}/transactions/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete transaction');
-
-      // Update the transactions state
-      setTransactions((prev) => prev.filter((_, i) => i !== index)); // Filter out the deleted transaction
-    } catch (error) {
-      console.error("Error deleting transaction:", error);
-      setFetchError(error.message);
+      await onAddTransaction(transaction); // Call the onAddTransaction prop
+      
+      // Update balance based on transaction type
+      const balanceChange = type === 'income' ? Number(amount) : -Number(amount);
+      onUpdateBalance(balanceChange); // Update balance based on the type
+      resetForm(); // Reset form after successful transaction
+    } catch (err) {
+      setError('Failed to add transaction.'); // Handle error if transaction fails
     }
   };
 
@@ -128,84 +99,88 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ userId, onAddTransact
     setDate('');
     setDescription('');
     setAmount('');
-    setCategory(type === 'Expense' ? expenseCategories[0] : incomeCategories[0]);
-    setEditIndex(null);
+    setCategory(type === 'expense' ? expenseCategories[0] : incomeCategories[0]);
+    setError(''); // Reset error message
   };
 
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
+        {error && <div className={styles.error}>{error}</div>} {/* Display error message */}
+
         <div className={styles.formFields}>
           <div className={`${styles.formField} ${styles.transactionTypeContainer}`}>
-            <div 
-              className={`${styles.transactionTypeLabel} ${type === 'Expense' ? styles.active : ''}`} 
-              onClick={() => setType('Expense')}
-            >
-              <input 
-                type="radio" 
-                className={styles.hiddenRadio} 
-                checked={type === 'Expense'} 
-                onChange={() => setType('Expense')} 
+            <label className={`${styles.transactionTypeLabel} ${type === 'expense' ? styles.active : ''}`}>
+              <input
+                type="radio"
+                className={styles.hiddenRadio}
+                checked={type === 'expense'}
+                onChange={() => handleTypeChange('expense')} // Use handler to change type
               />
               <div className={styles.squareButton}></div>
               Expense
-            </div>
-            <div 
-              className={`${styles.transactionTypeLabel} ${type === 'Income' ? styles.active : ''}`} 
-              onClick={() => setType('Income')}
-            >
-              <input 
-                type="radio" 
-                className={styles.hiddenRadio} 
-                checked={type === 'Income'} 
-                onChange={() => setType('Income')} 
+            </label>
+            <label className={`${styles.transactionTypeLabel} ${type === 'income' ? styles.active : ''}`}>
+              <input
+                type="radio"
+                className={styles.hiddenRadio}
+                checked={type === 'income'}
+                onChange={() => handleTypeChange('income')} // Use handler to change type
               />
               <div className={styles.squareButton}></div>
               Income
-            </div>
+            </label>
           </div>
 
           <div className={styles.formField}>
             <label className={styles.formLabel}>Date</label>
-            <input 
-              type="date" 
-              value={date} 
-              onChange={(e) => setDate(e.target.value)} 
-              className={styles.formInput} 
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className={styles.formInput}
+              required
             />
-            {errors.date && <p className={styles.formError}>{errors.date}</p>}
           </div>
 
           <div className={styles.formField}>
             <label className={styles.formLabel}>Description</label>
-            <input 
-              type="text" 
-              value={description} 
-              onChange={(e) => setDescription(e.target.value)} 
-              className={styles.formInput} 
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={styles.formInput}
+              required
+              placeholder="Max 50 characters"
             />
-            {errors.description && <p className={styles.formError}>{errors.description}</p>}
+            {description.length > 50 && (
+              <div className={styles.error}>Description cannot exceed 50 characters.</div>
+            )}
           </div>
 
           <div className={styles.formField}>
             <label className={styles.formLabel}>Amount</label>
-            <input 
-              type="number" 
-              value={amount} 
-              onChange={(e) => setAmount(Number(e.target.value) || '')} 
-              className={styles.formInput} 
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
+              className={styles.formInput}
+              required
+              min={0} // Set minimum amount to 0
+              max={100000000} // Set a reasonable maximum amount (adjust as necessary)
+              step="0.01" // Allow decimal values
+              placeholder='$'
             />
-            {errors.amount && <p className={styles.formError}>{errors.amount}</p>}
           </div>
 
           <div className={styles.formField}>
             <label className={styles.formLabel}>Category</label>
-            <select 
-              value={category} 
-              onChange={(e) => setCategory(e.target.value)} 
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
               className={styles.formSelect}
             >
-              {(type === 'Expense' ? expenseCategories : incomeCategories).map((cat) => (
+              {(type === 'expense' ? expenseCategories : incomeCategories).map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
@@ -213,34 +188,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ userId, onAddTransact
 
           <div className={styles.buttonContainer}>
             <button type="submit" className={styles.submitButton}>
-              {editIndex !== null ? 'Update Transaction' : 'Add Transaction'}
+              {initialTransaction ? 'Update Transaction' : 'Add Transaction'} {/* Change button text */}
             </button>
           </div>
         </div>
       </form>
-
-      {fetchError && <p className={styles.errorMessage}>{fetchError}</p>}
-
-      <div className={styles.transactionList}>
-        {transactions.map((transaction, index) => (
-          <div key={transaction._id} className={styles.transactionItem}>
-            <p>{transaction.date} - {transaction.description} - ${transaction.amount} - {transaction.category}</p>
-            <button onClick={() => handleRemove(index)} className={styles.removeButton}>
-              Remove
-            </button>
-            <button onClick={() => {
-              setEditIndex(index);
-              setDate(transaction.date);
-              setDescription(transaction.description);
-              setAmount(transaction.amount);
-              setCategory(transaction.category);
-              setType(transaction.type);
-            }} className={styles.editButton}>
-              Edit
-            </button>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };

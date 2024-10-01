@@ -1,15 +1,40 @@
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   padding: 20px;
-  max-width: 1400px;
+  width: 700px;
   margin: 0 auto;
+  flex: 1;
 }
 
-.title {
-  margin-bottom: 20px;
+.header {
+  display: flex;
+  justify-content: space-between; /* Aligns the title and logout button */
+  align-items: center; /* Vertically centers the items */
+  margin-bottom: 10px;
 }
+
+.logoutButton {
+  padding: 10px 15px; /* Padding for the button */
+  border: red; /* Remove default border */
+  background-color: rgba(255, 77, 77, 0.8); /* Lighter red with opacity */
+  color: white; /* Text color */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s; /* Transition effect */
+  font-size: 1rem; /* Font size */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.logoutButton:hover {
+  background-color: rgba(255, 77, 77, 0.6); /* Darker red with opacity on hover */
+}
+
+
+/* Optionally, add some margin to the title */
+.title {
+  margin: 0; /* Removes default margin */
+}
+
 
 .dashboard {
   display: flex;
@@ -19,7 +44,7 @@
   flex-wrap: wrap;
 }
 
-.dashboard .card {
+.card {
   flex: 1;
   min-width: 300px;
   padding: 20px;
@@ -47,110 +72,163 @@
 }
 
 .transactionItem {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.transactionItem.expense {
-  color: #d32f2f;
+.placeholder {
+  height: 78px; /* Same height as transaction items */
+  background-color: rgba(0, 0, 0, 0.1); /* Light gray for visibility */
 }
 
-.transactionItem.income {
-  color: #388e3c;
+.transactionItem:hover {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
-.formGroup {
+.transactionDetails {
+  flex-grow: 1; /* Allows the details to take most of the space */
+}
+
+.transactionDetails p {
+  margin: 0;
+  color: #333;
+}
+
+.transactionDetails .category {
+  font-size: 12px;
+  color: #888;
+}
+
+.transactionItem .income {
+  color: #4caf50; /* Green for income */
+}
+
+.transactionItem .expense {
+  color: #f44336; /* Red for expense */
+}
+
+.transactionItem .amount {
+  font-weight: bold;
+}
+
+.buttonGroup {
+  display: flex;
+}
+
+.transactionItem .editButton,
+.transactionItem .deleteButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.transactionItem .editButton:hover {
+  background-color: rgba(0, 128, 0, 0.1); /* Hover effect for edit button */
+}
+
+.transactionItem .deleteButton:hover {
+  background-color: rgba(255, 0, 0, 0.1); /* Hover effect for delete button */
+}
+
+.transactionItem .editButton::before {
+  content: '✏️'; /* Icon for edit button */
+}
+
+.transactionItem .deleteButton::before {
+  content: '🗑️'; /* Icon for delete button */
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 20px;
 }
 
-.formField {
-  display: flex;
-  flex-direction: column;
-}
-
-.formGroup label {
-  margin-bottom: 5px;
-}
-
-.formGroup input, 
-.formGroup select {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-}
-
-.buttonContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.buttonContainer .submitButton {
-  flex: 1 1 calc(50% - 10px); /* Adjust for a new row */
-}
-
-.submitButton {
-  padding: 12px 20px;
-  background-color: #0070f3;
-  color: white;
+.pageButton {
+  background-color: #f0f0f0; /* Default light background */
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  color: #333; /* Dark text color */
   font-size: 16px;
-}
-
-.submitButton:hover {
-  background-color: #005bb5;
-}
-
-.formError {
-  color: red;
-  font-size: 12px;
-}
-
-.squareButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  border: 2px solid #0070f3;
-  border-radius: 8px; /* Square shape */
-  background-color: #fff;
+  padding: 10px 15px;
+  margin: 0 5px;
+  border-radius: 50px; /* Pill-shaped buttons */
   cursor: pointer;
-  font-size: 16px;
-  margin-right: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.squareButton.active {
-  background-color: #0070f3;
-  color: white;
-  border-color: #0070f3;
+.pageButton:hover {
+  background-color: #e0e0e0; /* Slightly darker on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
 }
 
-.squareButton + .squareButton {
-  margin-right: 0;
+.pageButton:focus {
+  outline: none;
 }
 
-/* Profile.module.css */
-.logoutButton {
-  background-color: #e74c3c; /* Red color for logout button */
-  color: white;
+.pageButton.active {
+  background-color: #007BFF; /* Blue background for active button */
+  color: white; /* White text for active button */
+  font-weight: bold; /* Bold text for active button */
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Stronger shadow for active */
+}
+
+.pageButton.disabled {
+  background-color: #ccc; /* Gray background for disabled buttons */
+  color: #888; /* Lighter text color for disabled */
+  cursor: not-allowed;
+}
+
+.sortContainer {
+  width: 100%; /* Make the container full width */
+  text-align: right; /* Align the button to the right */
+  margin-bottom: 10px; /* Add margin for spacing */
+}
+
+.sortButton {
+  background-color: transparent; /* No background color */
   border: none;
-  padding: 10px 20px;
-  margin-top: 10px;
-  cursor: pointer;
-  border-radius: 5px;
+  color: #333; /* Dark color for the text/icon */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Font size */
+  transition: color 0.3s, transform 0.3s; /* Smooth transitions */
 }
 
-.logoutButton:hover {
-  background-color: #c0392b; /* Darker red on hover */
+.sortButton:hover {
+  color: #0070f3; /* Change color on hover */
+  transform: scale(1.05); /* Slightly scale up on hover */
 }
 
+.chartsWrapper{
+  padding: 1rem;
+  margin-top: 1rem;
+}
 
-/* Media Queries */
+.chartsTitle{
+  text-align: center;
+  border-top: 1px solid #a7a7a7;
+  padding-top: 1rem;
+}
+
+/* For mobile responsiveness */
 @media (max-width: 768px) {
+  .container{
+    width: 100%;
+  }
+
   .dashboard {
     flex-direction: column;
     align-items: stretch;
@@ -160,18 +238,30 @@
     margin-bottom: 20px;
   }
 
-  .buttonContainer {
-    flex-direction: column;
-    gap: 10px;
+  .transactionItem {
+    flex-direction: column; /* Stack items vertically on small screens */
+    align-items: flex-start; /* Align items to the left */
   }
 
-  .buttonContainer .submitButton {
-    flex: none;
-    width: 100%;
+  .transactionAmount {
+    margin-top: 5px; /* Space out amount from other details */
+  }
+
+  .transactionItem {
+    flex-direction: column;
+    align-items: flex-start;
   }
   
-  .squareButton {
-    width: 100%;
-    margin-bottom: 10px; /* Adjust spacing for vertical layout */
+  .transactionItem p {
+    margin-bottom: 10px;
+  }
+
+  .buttonGroup {
+    align-self: flex-end; /* Align buttons at the end on smaller screens */
+  }
+
+  .pageButton {
+    padding: 8px 12px; /* Adjust padding for smaller screens */
+    font-size: 14px;   /* Slightly smaller text */
   }
 }

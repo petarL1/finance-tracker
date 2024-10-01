@@ -8,7 +8,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #1a1a1a;
+  background-color: #001f3f;
   color: white;
   position: relative;
 }
@@ -32,7 +32,7 @@
   top: 70px; /* Adjust depending on the header height */
   right: 0;
   width: 100%; /* Make the nav take up the full width */
-  background-color: #1a1a1a; /* Same background color as the header */
+  background-color: #001f3f; /* Same background color as the header */
 }
 
 .nav ul {
@@ -120,20 +120,6 @@
   display: block;
 }
 
-.logoutButton {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0.75rem 1rem;
-  transition: color 0.3s ease;
-}
-
-.logoutButton:hover {
-  color: #ff4d4d; /* Or any color indicating logout action */
-}
-
 
 /* Mobile-specific styles */
 @media (max-width: 768px) {
@@ -145,7 +131,7 @@
     position: absolute;
     top: 75px;
     right: 0;
-    background-color: #1a1a1a;
+    background-color: #001f3f;
     width: 100%;
     text-align: left;
     max-height: 0; /* Initially hidden */
