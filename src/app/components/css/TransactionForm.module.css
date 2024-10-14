@@ -129,6 +129,51 @@
   margin-top: 8px;
 }
 
+.amountInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.amountInputWrapper input[type="number"] {
+  flex-grow: 1; /* Allows the input to take available space */
+  padding-right: 60px; /* Space for the dropdown */
+  border: 1px solid #ddd; /* Keep the border */
+  border-radius: 8px 0 0 8px; /* Rounded corners on the left */
+  border-right: none; /* Remove right border */
+  font-size: 16px;
+  outline: none; /* Remove default outline */
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield;
+}
+
+.amountInputWrapper input[type="number"]::-webkit-inner-spin-button,
+.amountInputWrapper input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Hide arrows */
+  margin: 0; /* Remove margin */
+}
+
+/* Style for the currency selector */
+.currencySelect {
+  -moz-appearance: none; /* Firefox */
+  -webkit-appearance: none; /* Safari and Chrome */
+  appearance: none; /* Remove default styling in most browsers */
+  border: 1px solid #ddd; /* Keep the border */
+  border-left: none;
+  padding: 10px; /* Adjust padding for a consistent look */
+  border-radius: 0 8px 8px 0; /* Rounded corners on the right */
+  background-color: #fff; /* Same background as input */
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  outline: none; /* Remove default outline */
+  margin-left: -1px; /* Align with input without gap */
+}
+
+.currencySelect:hover{
+  text-decoration: none;
+}
+
 .buttonContainer {
   display: flex;
 }
@@ -161,6 +206,11 @@
   .container {
     flex-direction: column;
     gap: 10px; /* Adjust gap for smaller screens */
+  }
+
+  .form{
+    width: 100%;
+    max-width: 100%;
   }
 
   .transactionTypeContainer {

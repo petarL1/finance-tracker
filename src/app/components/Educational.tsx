@@ -1,16 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import styles from './css/Educational.module.css';
+import React, { useState, useEffect } from 'react';
+import ArticleModal from './ArticleModal';
+import styles from './css/Educational.module.css'; // Adjust path as necessary
+
+interface Article {
+  title: string;
+  slug: string;
+  content: string | null;
+  references: string[]; // Array of reference strings
+}
 
 const Educational: React.FC = () => {
-  const [posts, setPosts] = useState([
-    { title: 'Budgeting 101', summary: 'Learn the basics of budgeting and financial planning.', link: '/blog/budgeting-101' },
-    { title: 'Saving for Retirement', summary: 'Tips on how to start saving for retirement early.', link: '/blog/saving-for-retirement' },
-    { title: 'Investing Basics', summary: 'An introduction to investing and building wealth.', link: '/blog/investing-basics' },
-    { title: 'Debt Management Strategies', summary: 'How to effectively manage and pay off debt.', link: '/blog/debt-management' },
-    { title: 'Understanding Credit Scores', summary: 'Everything you need to know about credit scores.', link: '/blog/credit-scores' },
-    { title: 'Tax Planning Tips', summary: 'How to minimize your tax liabilities.', link: '/blog/tax-planning' },
-  ]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<{ title: string; content: string | null; references: string[] }>({
+    title: '',
+    content: null,
+    references: [],
+  });
+  const [posts, setPosts] = useState<Article[]>([]);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      const response = await fetch('/api/articles'); // Fetch articles from your API
+      const data = await response.json();
+      setPosts(data);
+    };
+
+    fetchArticles();
+  }, []);
+
+  const openModal = (slug: string, title: string) => {
+    const post = posts.find(p => p.slug === slug);
+    if (post) {
+      setSelectedPost({ title, content: post.content, references: post.references });
+      setModalOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedPost({ title: '', content: null, references: [] });
+  };
 
   return (
     <section className={styles.blog}>
@@ -19,11 +48,18 @@ const Educational: React.FC = () => {
         {posts.map((post, index) => (
           <div key={index} className={styles.post}>
             <h3>{post.title}</h3>
-            <p>{post.summary}</p>
-            <Link href={post.link}>Read More</Link>
+            <button onClick={() => openModal(post.slug, post.title)}>Read More</button>
           </div>
         ))}
       </div>
+
+      <ArticleModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        title={selectedPost.title}
+        content={selectedPost.content}
+        references={selectedPost.references} // Pass references to the modal
+      />
     </section>
   );
 };

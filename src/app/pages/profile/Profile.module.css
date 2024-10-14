@@ -16,7 +16,7 @@
 
 .logoutButton {
   padding: 10px 15px; /* Padding for the button */
-  border: red; /* Remove default border */
+  border: none; /* Remove default border */
   background-color: rgba(255, 77, 77, 0.8); /* Lighter red with opacity */
   color: white; /* Text color */
   cursor: pointer; /* Pointer cursor */
@@ -29,12 +29,10 @@
   background-color: rgba(255, 77, 77, 0.6); /* Darker red with opacity on hover */
 }
 
-
 /* Optionally, add some margin to the title */
 .title {
   margin: 0; /* Removes default margin */
 }
-
 
 .dashboard {
   display: flex;
@@ -54,15 +52,14 @@
 }
 
 .cardTitle {
-  margin-bottom: 10px;
   font-size: 18px;
   font-weight: 600;
 }
 
 .cardBalance {
+  margin-bottom: 0;
   font-size: 24px;
   font-weight: 700;
-  border-bottom: 1px solid #ddd;
 }
 
 .transactionList {
@@ -84,8 +81,8 @@
 }
 
 .placeholder {
-  height: 78px; /* Same height as transaction items */
-  background-color: rgba(0, 0, 0, 0.1); /* Light gray for visibility */
+  height: 24px; /* Match height of transaction items */
+  width: 100%; /* Match width of transaction items */
 }
 
 .transactionItem:hover {
@@ -119,36 +116,43 @@
   font-weight: bold;
 }
 
-.buttonGroup {
+.transactionActions {
   display: flex;
+  gap: 12px; /* Space between the icons */
 }
 
-.transactionItem .editButton,
-.transactionItem .deleteButton {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
+.editIcon,
+.deleteIcon {
+  font-size: 2rem; /* Increase the size of the icons */
+  padding: 7px; /* Add more padding around the icons */
+  border-radius: 50%; /* Make them circular */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+  cursor: pointer; /* Pointer cursor on hover */
 }
 
-.transactionItem .editButton:hover {
-  background-color: rgba(0, 128, 0, 0.1); /* Hover effect for edit button */
+.editIcon {
+  color: #4caf50; /* Green color for edit */
+  background-color: #ffffff; /* White background for edit */
+  border: 2px solid #4caf50; /* Green border */
 }
 
-.transactionItem .deleteButton:hover {
-  background-color: rgba(255, 0, 0, 0.1); /* Hover effect for delete button */
+.deleteIcon {
+  color: #F44336; /* Red color for delete */
+  background-color: #ffffff; /* White background for delete */
+  border: 2px solid #F44336; /* Red border */
 }
 
-.transactionItem .editButton::before {
-  content: '✏️'; /* Icon for edit button */
+.editIcon:hover {
+  background-color: #4caf50; /* Green background on hover */
+  color: white; /* Change icon color to white */
+  transform: scale(1.1); /* Slightly enlarge on hover */
 }
 
-.transactionItem .deleteButton::before {
-  content: '🗑️'; /* Icon for delete button */
+.deleteIcon:hover {
+  background-color: #F44336; /* Red background on hover */
+  color: white; /* Change icon color to white */
+  transform: scale(1.1); /* Slightly enlarge on hover */
 }
-
 .pagination {
   display: flex;
   justify-content: center;
@@ -212,21 +216,51 @@
   transform: scale(1.05); /* Slightly scale up on hover */
 }
 
-.chartsWrapper{
+.chartsWrapper {
   padding: 1rem;
   margin-top: 1rem;
 }
 
-.chartsTitle{
+.chartsHeading {
   text-align: center;
-  border-top: 1px solid #a7a7a7;
-  padding-top: 1rem;
+  padding-top: 2rem;
 }
+
+.balanceContainer {
+  display: flex;
+  justify-content: space-between; /* Space out balance and currency switcher */
+  align-items: center; /* Center items vertically */
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.currencySwitcher {
+  display: flex;
+  align-items: center; /* Center vertically */
+}
+
+.currencySwitcher select {
+  padding: 5px 10px; /* Add padding for better click area */
+  border: 1px solid #ccc; /* Light border for the dropdown */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background color */
+  transition: border-color 0.3s; /* Transition for border color */
+}
+
+.currencySwitcher select:hover {
+  border-color: #007BFF; /* Change border color on hover */
+}
+
 
 /* For mobile responsiveness */
 @media (max-width: 768px) {
-  .container{
+  .container {
     width: 100%;
+  }
+  .card{
+    width: 100%;
+    box-shadow: none;
   }
 
   .dashboard {
@@ -238,30 +272,46 @@
     margin-bottom: 20px;
   }
 
-  .transactionItem {
-    flex-direction: column; /* Stack items vertically on small screens */
-    align-items: flex-start; /* Align items to the left */
-  }
 
   .transactionAmount {
     margin-top: 5px; /* Space out amount from other details */
   }
 
-  .transactionItem {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
   .transactionItem p {
     margin-bottom: 10px;
-  }
-
-  .buttonGroup {
-    align-self: flex-end; /* Align buttons at the end on smaller screens */
   }
 
   .pageButton {
     padding: 8px 12px; /* Adjust padding for smaller screens */
     font-size: 14px;   /* Slightly smaller text */
+  }
+  .charts{
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 1500px) {
+  .container {
+    align-items: center; /* Center-align items vertically */
+    width: auto;
+    margin: 0;
+    padding: 20px;
+    gap:20px;
+  }
+
+  .dashboard {
+    flex-wrap: nowrap;
+    width: auto;
+  } 
+  .card{
+    min-width: 700px;
+  }
+  .charts{
+    flex:1;
+    max-width: 700px; /* Limit the charts width if needed */
+    margin: auto 0;
+  }
+  .logoutButton{
+    margin-left:1rem;
   }
 }

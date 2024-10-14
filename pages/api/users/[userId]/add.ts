@@ -1,3 +1,5 @@
+// pages/api/users/[userId]/add.ts
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../../src/lib/mongodb';
 import Transaction from '../../../../src/models/Transaction';
@@ -10,10 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     try {
-      const { amount, description, date, category, type } = req.body; // Extract transaction data from the body
+      const { amount, description, date, category, type, currency } = req.body; // Extract transaction data from the body
 
       // Validate the required fields (you can customize this as per your requirements)
-      if (!amount || !description || !date || !category || !type) {
+      if (!amount || !description || !date || !category || !type || !currency) {
         return res.status(400).json({ message: 'All fields are required' });
       }
 
@@ -37,6 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         date,
         category,
         type,
+        currency, // Add the currency field
       });
 
       // Save the transaction to the database

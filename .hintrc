@@ -21,6 +21,7 @@
         "select-name": "off",
         "label": "off"
       }
-    ]
+    ],
+    "typescript-config/strict": "off"
   }
 }

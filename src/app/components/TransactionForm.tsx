@@ -7,91 +7,122 @@ interface Transaction {
   description: string;
   amount: number;
   category: string;
-  type: 'expense' | 'income'; // Keep type as 'expense' | 'income'
+  type: 'expense' | 'income';
+  currency: 'USD' | 'EUR' | 'MKD';
 }
 
 interface TransactionFormProps {
-  userId: string; // Pass the logged-in user's ID
-  onAddTransaction: (transaction: Omit<Transaction, "_id">) => Promise<void>; // Keep this prop
-  onUpdateBalance: (amount: number) => void; // Add prop for updating balance
-  initialTransaction?: Transaction; // Add the initialTransaction prop
+  userId: string;
+  onAddTransaction: (transaction: Omit<Transaction, '_id'>) => Promise<void>;
+  onUpdateBalance: (amount: number) => void;
+  initialTransaction?: Transaction;
+  selectedCurrency: 'USD' | 'EUR' | 'MKD'; // Prop for selected currency
+  currencyRates: { [key in 'USD' | 'EUR' | 'MKD']: number }; // Conversion rates passed as props
 }
 
-const expenseCategories = ["Food", "Utilities", "Entertainment", "Healthcare"];
-const incomeCategories = ["Salary", "Freelancing", "Investments", "Gifts"];
+// Helper function to convert amount based on selected currency
+const convertAmount = (
+  amount: number,
+  fromCurrency: 'USD' | 'EUR' | 'MKD',
+  toCurrency: 'USD' | 'EUR' | 'MKD',
+  rates: { [key in 'USD' | 'EUR' | 'MKD']: number } // Use the rates from props
+): number => {
+  if (fromCurrency === toCurrency) return amount;
+  return (amount / rates[fromCurrency]) * rates[toCurrency];
+};
+
+const expenseCategories = ['Food', 'Utilities', 'Entertainment', 'Healthcare'];
+const incomeCategories = ['Salary', 'Freelancing', 'Investments', 'Gifts'];
 
 const TransactionForm: React.FC<TransactionFormProps> = ({
   userId,
   onAddTransaction,
   onUpdateBalance,
-  initialTransaction // Destructure initialTransaction
+  initialTransaction,
+  selectedCurrency, // Destructure selectedCurrency
+  currencyRates, // Destructure currencyRates
 }) => {
-  // State initializations
+  // State initialization
   const [date, setDate] = useState<string>(initialTransaction?.date || '');
   const [description, setDescription] = useState<string>(initialTransaction?.description || '');
-  const [amount, setAmount] = useState<number | ''>(initialTransaction?.amount || '');
+  const [amount, setAmount] = useState<number | ''>(''); // Raw amount entered by the user
   const [category, setCategory] = useState<string>(
     initialTransaction?.category || expenseCategories[0]
   );
   const [type, setType] = useState<'expense' | 'income'>(
     initialTransaction?.type || 'expense'
   );
-  const [error, setError] = useState<string>(''); // Error state
+  const [error, setError] = useState<string>('');
+  const [currency, setCurrency] = useState<'USD' | 'EUR' | 'MKD'>(
+    initialTransaction?.currency || selectedCurrency // Initialize with initialTransaction currency or selectedCurrency
+  );
 
-  // Effect to reset form fields when initialTransaction changes
+  const currencySymbols: { [key in 'USD' | 'EUR' | 'MKD']: string } = {
+    USD: '$',
+    EUR: '€',
+    MKD: 'ден.',
+  };
+
+  // Effect to convert amount for editing if there's an initialTransaction
   useEffect(() => {
     if (initialTransaction) {
-      setDate(new Date(initialTransaction.date).toISOString().split('T')[0]); // Format date to 'YYYY-MM-DD'
+      setDate(new Date(initialTransaction.date).toISOString().split('T')[0]);
       setDescription(initialTransaction.description);
-      setAmount(initialTransaction.amount);
       setCategory(initialTransaction.category);
       setType(initialTransaction.type);
+      setCurrency(initialTransaction.currency); // Set currency based on transaction
+
+      const convertedAmount = convertAmount(
+        initialTransaction.amount,
+        initialTransaction.currency, // Use the currency from the transaction
+        selectedCurrency,
+        currencyRates
+      );
+      setAmount(Number(convertedAmount.toFixed(2))); // Keep 2 decimal points for display
     } else {
-      resetForm(); // Reset to default values if no initialTransaction
+      resetForm();
     }
-  }, [initialTransaction]);
+  }, [initialTransaction, selectedCurrency, currencyRates]);
 
   const handleTypeChange = (newType: 'expense' | 'income') => {
     setType(newType);
-    // Adjust category based on new type
-    if (newType === 'expense') {
-      setCategory(expenseCategories[0]); // Default to first expense category
-    } else {
-      setCategory(incomeCategories[0]); // Default to first income category
-    }
+    setCategory(newType === 'expense' ? expenseCategories[0] : incomeCategories[0]);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    // Basic validation
-    if (!date || !description || amount === '' || amount < 0) {
-      setError('Please fill out all fields with valid inputs.'); // Set error message
+    if (!date || !description || amount === '' || +amount < 0) {
+      setError('Please fill out all fields with valid inputs.');
       return;
     }
 
     if (description.length > 50) {
+      setError('Description cannot exceed 50 characters.');
       return;
     }
 
+    // Convert the amount to USD before submitting
+    const amountInUSD = convertAmount(Number(amount), currency, 'USD', currencyRates);
+
     const transaction = {
-      _id: initialTransaction?._id, // Include the _id for editing
+      _id: initialTransaction?._id,
       date,
       description,
-      amount,
+      amount: Number(amount),  // Store the amount as it is
       category,
       type,
+      currency,  // Store the currency the user selected
     };
 
     try {
-      await onAddTransaction(transaction); // Call the onAddTransaction prop
-      
-      // Update balance based on transaction type
+      await onAddTransaction(transaction);
+
+      // No conversion needed for balance updates, as it's already in the correct currency
       const balanceChange = type === 'income' ? Number(amount) : -Number(amount);
-      onUpdateBalance(balanceChange); // Update balance based on the type
-      resetForm(); // Reset form after successful transaction
+      onUpdateBalance(balanceChange);
+      resetForm();
     } catch (err) {
-      setError('Failed to add transaction.'); // Handle error if transaction fails
+      setError('Failed to add transaction.');
     }
   };
 
@@ -100,14 +131,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     setDescription('');
     setAmount('');
     setCategory(type === 'expense' ? expenseCategories[0] : incomeCategories[0]);
-    setError(''); // Reset error message
+    setCurrency(selectedCurrency); // Reset currency to currently selected
+    setError('');
   };
 
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        {error && <div className={styles.error}>{error}</div>} {/* Display error message */}
-
+        {error && <div className={styles.error}>{error}</div>}
+  
         <div className={styles.formFields}>
           <div className={`${styles.formField} ${styles.transactionTypeContainer}`}>
             <label className={`${styles.transactionTypeLabel} ${type === 'expense' ? styles.active : ''}`}>
@@ -115,7 +147,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
                 type="radio"
                 className={styles.hiddenRadio}
                 checked={type === 'expense'}
-                onChange={() => handleTypeChange('expense')} // Use handler to change type
+                onChange={() => handleTypeChange('expense')}
               />
               <div className={styles.squareButton}></div>
               Expense
@@ -125,13 +157,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
                 type="radio"
                 className={styles.hiddenRadio}
                 checked={type === 'income'}
-                onChange={() => handleTypeChange('income')} // Use handler to change type
+                onChange={() => handleTypeChange('income')}
               />
               <div className={styles.squareButton}></div>
               Income
             </label>
           </div>
-
+  
           <div className={styles.formField}>
             <label className={styles.formLabel}>Date</label>
             <input
@@ -142,7 +174,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
               required
             />
           </div>
-
+  
           <div className={styles.formField}>
             <label className={styles.formLabel}>Description</label>
             <input
@@ -157,22 +189,36 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
               <div className={styles.error}>Description cannot exceed 50 characters.</div>
             )}
           </div>
-
+  
           <div className={styles.formField}>
-            <label className={styles.formLabel}>Amount</label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
-              className={styles.formInput}
-              required
-              min={0} // Set minimum amount to 0
-              max={100000000} // Set a reasonable maximum amount (adjust as necessary)
-              step="0.01" // Allow decimal values
-              placeholder='$'
-            />
+            <label className={styles.formLabel}>
+              Amount
+            </label>
+            <div className={styles.amountInputWrapper}>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
+                className={styles.formInput}
+                required
+                min={0}
+                max={100000000}
+                step="0.01"
+                placeholder={`${currencySymbols[currency]}`}
+                onKeyDown={(e) => e.key === 'e' && e.preventDefault()} // Dynamic placeholder
+              />
+              <select
+                className={styles.currencySelect}
+                value={currency} // Use the currency state from your transaction
+                onChange={(e) => setCurrency(e.target.value as 'USD' | 'EUR' | 'MKD')} // Ensure correct state update
+              >
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="MKD">MKD</option>
+              </select>
+            </div>
           </div>
-
+  
           <div className={styles.formField}>
             <label className={styles.formLabel}>Category</label>
             <select
@@ -185,10 +231,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
               ))}
             </select>
           </div>
-
+  
           <div className={styles.buttonContainer}>
             <button type="submit" className={styles.submitButton}>
-              {initialTransaction ? 'Update Transaction' : 'Add Transaction'} {/* Change button text */}
+              {initialTransaction ? 'Update Transaction' : 'Add Transaction'}
             </button>
           </div>
         </div>

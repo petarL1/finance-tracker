@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       from: email, 
       to: process.env.CONTACT_EMAIL, 
       subject: `New message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`, 
+      text: `${name}\n${message}`, 
     };
     
 

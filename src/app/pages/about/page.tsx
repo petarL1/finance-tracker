@@ -10,7 +10,7 @@ const About: React.FC = () => {
       <section className={styles.content}>
         <div className={styles.imageContainer}>
           <Image 
-            src="/logo.png" 
+            src="/logo-black.png" 
             alt="Our Team" 
             fill
             objectFit="cover" 
@@ -20,11 +20,11 @@ const About: React.FC = () => {
         <div className={styles.text}>
           <p>
             Welcome to CashFlow! The only finance tracking app you will ever need, providing you with 
-            a number of tools to keep you one step ahead of others. With our personalized lists, charts and informational content,
+            a number of tools to keep you one step ahead of others. With our finance tracker, progress charts and informational content,
             you will be able to stay informed of your financial situation, at all times.
           </p>
           <p>
-            Our mission was to create a free to use finance tool which would virtually be useful to anyone. Don't prolong success any longer, sign up now!
+            The mission was to create a free to use finance tool which would virtually be useful to anyone. Don't prolong success any longer, sign up now!
           </p>
           <Link href="/" className={styles.link}>Back to Home
           </Link>
