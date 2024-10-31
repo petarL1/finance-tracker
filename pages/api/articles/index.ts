@@ -1,18 +1,12 @@
-// src/pages/api/articles/index.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../src/lib/mongodb';
 import Article from '../../../src/models/Article';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Connect to the database
   const db = await connectToDatabase();
-
   if (req.method === 'GET') {
     try {
-      // Fetch all articles
-      const articles = await Article.find({}).lean(); // Use lean for better performance
-
-      // Return the fetched articles as JSON
+      const articles = await Article.find({}).lean(); 
       return res.status(200).json(articles);
     } catch (error) {
       console.error('Failed to fetch articles:', error);

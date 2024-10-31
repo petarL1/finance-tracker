@@ -7,45 +7,37 @@ Chart.register(...registerables);
 interface Transaction {
   date: string;
   amount: number;
-  category: string; // Add a category property to transactions
-  type: 'income' | 'expense'; // Define the type of transaction
-  currency: 'USD' | 'EUR' | 'MKD'; // Define currency for transactions
+  category: string; 
+  type: 'income' | 'expense'; 
+  currency: 'USD' | 'EUR' | 'MKD'; 
 }
 
 interface CategoryChartProps {
   data: Transaction[];
-  selectedCurrency: 'USD' | 'EUR' | 'MKD'; // Add selectedCurrency prop
-  currencyRates: { [key: string]: number }; // Add currencyRates prop
+  selectedCurrency: 'USD' | 'EUR' | 'MKD'; 
+  currencyRates: { [key: string]: number }; 
 }
 
 const CategoryChart: React.FC<CategoryChartProps> = ({ data, selectedCurrency, currencyRates }) => {
   useEffect(() => {
     const ctxIncome = document.getElementById('incomeChart') as HTMLCanvasElement;
     const ctxExpense = document.getElementById('expenseChart') as HTMLCanvasElement;
-
-    // Destroy existing charts if they exist
     const incomeChartInstance = Chart.getChart(ctxIncome);
     if (incomeChartInstance) {
       incomeChartInstance.destroy();
     }
-
     const expenseChartInstance = Chart.getChart(ctxExpense);
     if (expenseChartInstance) {
       expenseChartInstance.destroy();
     }
-
     const convertAmount = (amount: number, fromCurrency: 'USD' | 'EUR' | 'MKD', toCurrency: 'USD' | 'EUR' | 'MKD') => {
-      // If converting to the same currency, no need to convert
       if (fromCurrency === toCurrency) {
         return amount;
       }
-      // Get the exchange rate for the conversion
       const conversionRate = currencyRates[toCurrency] / currencyRates[fromCurrency];
       return parseFloat((amount * conversionRate).toFixed(2));
     };
-    
-
-    // Aggregate income and expense data
+      
     const incomeData: { [key: string]: number } = {};
     const expenseData: { [key: string]: number } = {};
     
@@ -54,8 +46,7 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ data, selectedCurrency, c
         console.warn('Skipping invalid transaction:', item);
         return;
       }
-
-      // Convert amount to selected currency
+      
       const convertedAmount = convertAmount(item.amount, item.currency, selectedCurrency);
       
       if (item.type === 'income') {
@@ -64,8 +55,7 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ data, selectedCurrency, c
         expenseData[item.category] = (expenseData[item.category] || 0) + convertedAmount;
       }
     });
-
-    // Create income chart
+    
     const incomeLabels = Object.keys(incomeData);
     const incomeValues = Object.values(incomeData);
     new Chart(ctxIncome, {
@@ -76,10 +66,10 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ data, selectedCurrency, c
           label: 'Income by Category',
           data: incomeValues,
           backgroundColor: [
-            '#4caf50', // Green
-            '#2196F3', // Blue
-            '#FFC107', // Yellow
-            '#FF5722', // Orange
+            '#4caf50', 
+            '#2196F3', 
+            '#FFC107', 
+            '#FF5722', 
           ],
         }],
       },
@@ -97,11 +87,8 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ data, selectedCurrency, c
             titleColor: '#0070f3',
             bodyColor: '#000',
           },
-        },
-      },
-    });
-
-    // Create expense chart
+        },},
+    });    
     const expenseLabels = Object.keys(expenseData);
     const expenseValues = Object.values(expenseData);
     new Chart(ctxExpense, {
@@ -112,10 +99,10 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ data, selectedCurrency, c
           label: 'Expenses by Category',
           data: expenseValues,
           backgroundColor: [
-            '#f44336', // Red
-            '#FF9800', // Orange
-            '#5d1ca3', // Purple
-            '#8BC34A', // Light Green
+            '#f44336', 
+            '#FF9800', 
+            '#5d1ca3', 
+            '#8BC34A', 
           ],
         }],
       },
@@ -137,13 +124,12 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ data, selectedCurrency, c
       },
     });
     
-    // Cleanup function to destroy the charts
     return () => {
       if (incomeChartInstance) incomeChartInstance.destroy();
       if (expenseChartInstance) expenseChartInstance.destroy();
     };
-  }, [data, selectedCurrency, currencyRates]); // Update charts when data, selectedCurrency or currencyRates change
-
+  }, [data, selectedCurrency, currencyRates]); 
+  
   return (
     <div className={styles.chartContainer}>
       <canvas id="incomeChart" className={styles.pieChart}></canvas>

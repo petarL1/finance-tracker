@@ -9,29 +9,28 @@
 
 .header {
   display: flex;
-  justify-content: space-between; /* Aligns the title and logout button */
-  align-items: center; /* Vertically centers the items */
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
 .logoutButton {
-  padding: 10px 15px; /* Padding for the button */
-  border: none; /* Remove default border */
-  background-color: rgba(255, 77, 77, 0.8); /* Lighter red with opacity */
-  color: white; /* Text color */
-  cursor: pointer; /* Pointer cursor */
-  transition: background-color 0.3s; /* Transition effect */
-  font-size: 1rem; /* Font size */
-  border-radius: 5px; /* Rounded corners */
+  padding: 10px 15px;
+  border: none;
+  background-color: rgba(255, 77, 77, 0.8);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+  border-radius: 5px;
 }
 
 .logoutButton:hover {
-  background-color: rgba(255, 77, 77, 0.6); /* Darker red with opacity on hover */
+  background-color: rgba(255, 77, 77, 0.6);
 }
 
-/* Optionally, add some margin to the title */
 .title {
-  margin: 0; /* Removes default margin */
+  margin: 0;
 }
 
 .dashboard {
@@ -80,18 +79,13 @@
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.placeholder {
-  height: 24px; /* Match height of transaction items */
-  width: 100%; /* Match width of transaction items */
-}
-
 .transactionItem:hover {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
 .transactionDetails {
-  flex-grow: 1; /* Allows the details to take most of the space */
+  flex-grow: 1;
 }
 
 .transactionDetails p {
@@ -105,11 +99,11 @@
 }
 
 .transactionItem .income {
-  color: #4caf50; /* Green for income */
+  color: #4caf50;
 }
 
 .transactionItem .expense {
-  color: #f44336; /* Red for expense */
+  color: #f44336;
 }
 
 .transactionItem .amount {
@@ -118,102 +112,40 @@
 
 .transactionActions {
   display: flex;
-  gap: 12px; /* Space between the icons */
+  gap: 12px;
 }
 
 .editIcon,
 .deleteIcon {
-  font-size: 2rem; /* Increase the size of the icons */
-  padding: 7px; /* Add more padding around the icons */
-  border-radius: 50%; /* Make them circular */
-  transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
-  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 2rem;
+  padding: 7px;
+  border-radius: 50%;
+  transition: background-color 0.3s, transform 0.2s;
+  cursor: pointer;
 }
 
 .editIcon {
-  color: #4caf50; /* Green color for edit */
-  background-color: #ffffff; /* White background for edit */
-  border: 2px solid #4caf50; /* Green border */
+  color: #4caf50;
+  background-color: #ffffff;
+  border: 2px solid #4caf50;
 }
 
 .deleteIcon {
-  color: #F44336; /* Red color for delete */
-  background-color: #ffffff; /* White background for delete */
-  border: 2px solid #F44336; /* Red border */
+  color: #F44336;
+  background-color: #ffffff;
+  border: 2px solid #F44336;
 }
 
 .editIcon:hover {
-  background-color: #4caf50; /* Green background on hover */
-  color: white; /* Change icon color to white */
-  transform: scale(1.1); /* Slightly enlarge on hover */
+  background-color: #4caf50;
+  color: white;
+  transform: scale(1.1);
 }
 
 .deleteIcon:hover {
-  background-color: #F44336; /* Red background on hover */
-  color: white; /* Change icon color to white */
-  transform: scale(1.1); /* Slightly enlarge on hover */
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.pageButton {
-  background-color: #f0f0f0; /* Default light background */
-  border: none;
-  color: #333; /* Dark text color */
-  font-size: 16px;
-  padding: 10px 15px;
-  margin: 0 5px;
-  border-radius: 50px; /* Pill-shaped buttons */
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.pageButton:hover {
-  background-color: #e0e0e0; /* Slightly darker on hover */
-  transform: translateY(-2px); /* Lift effect on hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-}
-
-.pageButton:focus {
-  outline: none;
-}
-
-.pageButton.active {
-  background-color: #007BFF; /* Blue background for active button */
-  color: white; /* White text for active button */
-  font-weight: bold; /* Bold text for active button */
-  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Stronger shadow for active */
-}
-
-.pageButton.disabled {
-  background-color: #ccc; /* Gray background for disabled buttons */
-  color: #888; /* Lighter text color for disabled */
-  cursor: not-allowed;
-}
-
-.sortContainer {
-  width: 100%; /* Make the container full width */
-  text-align: right; /* Align the button to the right */
-  margin-bottom: 10px; /* Add margin for spacing */
-}
-
-.sortButton {
-  background-color: transparent; /* No background color */
-  border: none;
-  color: #333; /* Dark color for the text/icon */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 16px; /* Font size */
-  transition: color 0.3s, transform 0.3s; /* Smooth transitions */
-}
-
-.sortButton:hover {
-  color: #0070f3; /* Change color on hover */
-  transform: scale(1.05); /* Slightly scale up on hover */
+  background-color: #F44336;
+  color: white;
+  transform: scale(1.1);
 }
 
 .chartsWrapper {
@@ -228,8 +160,8 @@
 
 .balanceContainer {
   display: flex;
-  justify-content: space-between; /* Space out balance and currency switcher */
-  align-items: center; /* Center items vertically */
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
   margin-bottom: 10px;
@@ -237,23 +169,17 @@
 
 .currencySwitcher {
   display: flex;
-  align-items: center; /* Center vertically */
+  align-items: center;
 }
 
 .currencySwitcher select {
-  padding: 5px 10px; /* Add padding for better click area */
-  border: 1px solid #ccc; /* Light border for the dropdown */
-  border-radius: 4px; /* Rounded corners */
-  background-color: #f9f9f9; /* Light background color */
-  transition: border-color 0.3s; /* Transition for border color */
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s;
 }
 
-.currencySwitcher select:hover {
-  border-color: #007BFF; /* Change border color on hover */
-}
-
-
-/* For mobile responsiveness */
 @media (max-width: 768px) {
   .container {
     width: 100%;
@@ -274,7 +200,7 @@
 
 
   .transactionAmount {
-    margin-top: 5px; /* Space out amount from other details */
+    margin-top: 5px;
   }
 
   .transactionItem p {
@@ -282,8 +208,8 @@
   }
 
   .pageButton {
-    padding: 8px 12px; /* Adjust padding for smaller screens */
-    font-size: 14px;   /* Slightly smaller text */
+    padding: 8px 12px;
+    font-size: 14px;  
   }
   .charts{
     max-width: 100%;
@@ -292,7 +218,7 @@
 
 @media (min-width: 1500px) {
   .container {
-    align-items: center; /* Center-align items vertically */
+    align-items: center;
     width: auto;
     margin: 0;
     padding: 20px;
@@ -308,7 +234,7 @@
   }
   .charts{
     flex:1;
-    max-width: 700px; /* Limit the charts width if needed */
+    max-width: 700px;
     margin: auto 0;
   }
   .logoutButton{

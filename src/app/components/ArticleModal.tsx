@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
-import styles from './css/ArticleModal.module.css'; // Adjust path as necessary
+import styles from './css/ArticleModal.module.css'; 
 
 interface ArticleModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   content: string | null;
-  references: string[]; // Add references prop
+  references: string[]; 
 }
-
 const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, title, content, references }) => {
   if (!isOpen) return null;
 
@@ -17,13 +16,11 @@ const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, title, con
       onClose();
     }
   };
-
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       onClose();
     }
   };
-
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -44,13 +41,9 @@ const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, title, con
               <li key={index} dangerouslySetInnerHTML={{ __html: reference }} /> 
               ))}
             </ul>
-          </div>
-        )}
-
+          </div>)}
         <button onClick={onClose}>Close</button>
       </div>
     </div>
-  );
-};
-
+  );};
 export default ArticleModal;

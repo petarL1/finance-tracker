@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from './About.module.css'; // Import the CSS module
+import styles from './About.module.css'; 
 
 const About: React.FC = () => {
   return (
@@ -9,13 +9,17 @@ const About: React.FC = () => {
       <h1 className={styles.heading}>About Us</h1>
       <section className={styles.content}>
         <div className={styles.imageContainer}>
-          <Image 
+        <Image 
             src="/logo-black.png" 
             alt="Our Team" 
             fill
-            objectFit="cover" 
+            sizes="(max-width: 600px) 100vw, 
+                  (max-width: 1200px) 50vw, 
+                  33vw" 
             className={styles.image}
-          />
+            style={{ objectFit: 'cover' }} 
+            />
+
         </div>
         <div className={styles.text}>
           <p>

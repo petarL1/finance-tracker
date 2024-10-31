@@ -3,6 +3,7 @@
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
+  flex:1;
 }
 
 .heading {
@@ -58,11 +59,9 @@
     height: 200px;
   }
 
-
   .heading {
     font-size: 2rem;
   }
-
   .text {
     font-size: 0.9rem;
   }

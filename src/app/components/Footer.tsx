@@ -1,5 +1,4 @@
-'use client';  // Ensures the component runs on the client side
-
+'use client';
 import React from 'react';
 import Link from 'next/link';
 import styles from './css/Footer.module.css';
@@ -55,8 +54,5 @@ const Footer: React.FC = () => {
       <p className={styles.copyright}>
         &copy; {new Date().getFullYear()} CashFlow. All rights reserved.
       </p>
-    </footer>
-  );
-};
-
+    </footer>);};
 export default Footer;

@@ -1,5 +1,4 @@
-// src/app/layout.tsx
-import ClientLayout from './client-layout'; // Adjust the path if necessary
+import ClientLayout from './client-layout';
 
 export const metadata = {
   title: 'Finance Tracker',
@@ -21,5 +20,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
-  );
-}
+  );}

@@ -1,7 +1,6 @@
 'use client';
-
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter for redirection
+import { useRouter } from 'next/navigation'; 
 import styles from './Register.module.css';
 
 const RegisterPage = () => {
@@ -10,7 +9,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter(); 
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -19,7 +18,6 @@ const RegisterPage = () => {
       setError('Passwords do not match');
       return;
     }
-
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -34,14 +32,12 @@ const RegisterPage = () => {
       if (response.ok) {
         setSuccess('Registration successful. Redirecting to login...');
         setError('');
-        // Clear form fields
         setUsername('');
         setPassword('');
         setConfirmPassword('');
-        // Redirect to login page
         setTimeout(() => {
           router.push('/pages/login');
-        }, 2000); // Redirect after 2 seconds
+        }, 2000); 
       } else {
         setError(data.message || 'Registration failed');
         setSuccess('');
@@ -51,7 +47,6 @@ const RegisterPage = () => {
       setSuccess('');
     }
   };
-
   return (
     <div className={styles.registerContainer}>
       <div className={styles.registerBox}>
@@ -96,5 +91,4 @@ const RegisterPage = () => {
     </div>
   );
 };
-
 export default RegisterPage;

@@ -1,16 +1,15 @@
 .chartContainer {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px; /* Add some margin at the top */
+    margin-top: 20px;
   }
   
   .pieChart, .balanceChartWrapper {
-    flex: 1 1 45%; /* Adjusts size for responsiveness */
+    flex: 1 1 45%;
     margin: 10px;
-     width: 45%; /* Set width to make them smaller */
-    height: 300px !important; /* Set a smaller height for the pie charts */
-  }
-  
+     width: 45%;
+    height: 300px !important;
+  }  
   @media (max-width: 768px) {
     .chartContainer{
       flex-wrap: wrap;

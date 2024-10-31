@@ -1,8 +1,7 @@
-// src/pages/api/auth/[...nextauth].ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyUser } from "../../../src/lib/auth"; // Adjust the path accordingly
-import { verifyPassword } from "../../../src/lib/auth"; // Adjust the path accordingly
+import { verifyUser } from "../../../src/lib/auth"; 
+import { verifyPassword } from "../../../src/lib/auth"; 
 
 export default NextAuth({
   providers: [
@@ -13,51 +12,48 @@ export default NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // Check for undefined credentials
-        if (!credentials?.username || !credentials?.password) {
-          console.log('Missing credentials'); // Log if credentials are not provided
-          return null; // Return null if credentials are not provided
-        }
-
-        // Find the user by username
-        const user = await verifyUser(credentials.username);
-        console.log('User fetched:', user); // Log fetched user
         
-        // Validate user existence and password
+        if (!credentials?.username || !credentials?.password) {
+          console.log('Missing credentials'); 
+          return null;}
+
+        const user = await verifyUser(credentials.username);
+        console.log('User fetched:', user); 
+        
         if (user && await verifyPassword(credentials.password, user.password)) {
-          console.log('User authenticated successfully:', { id: user.id, username: user.username }); // Log successful authentication
-          return { id: user._id.toString(), username: user.username }; // Ensure _id is converted to string
+          console.log('User authenticated successfully:', { id: user.id, username: user.username }); 
+          return { id: user._id.toString(), username: user.username }; 
         } else {
-          console.log('Authentication failed for user:', user ? user.username : 'User not found'); // Log authentication failure
-          return null; // Return null if authentication fails
+          console.log('Authentication failed for user:', user ? user.username : 'User not found'); 
+          return null; 
         }
       }
     })
   ],
   callbacks: {
     async jwt({ token, user }) {
-      // Add user info to the token on initial sign in
+      
       if (user) {
-        token.id = user.id; // Set user id on token
-        token.username = user.username; // Set username on token
+        token.id = user.id; 
+        token.username = user.username; 
       }
-      return token; // Return the token
+      return token; 
     },
     async session({ session, token }) {
-      // Add custom properties to the session
-      session.id = token.id as string; // Type assertion to ensure it's a string
-      session.username = token.username as string; // Type assertion to ensure it's a string
-      return session; // Return the updated session
+      
+      session.id = token.id as string; 
+      session.username = token.username as string; 
+      return session; 
     }
   },
   pages: {
-    signIn: "/pages/login" // Specify the login page path
+    signIn: "/pages/login" 
   },
-  // Configure JWT separately
+  
   jwt: {
-    secret: process.env.JWT_SECRET || 'mysecretkey', // Ensure your JWT secret is set
+    secret: process.env.JWT_SECRET || 'mysecretkey', 
   },
   session: {
-    strategy: 'jwt', // Use JWT strategy for sessions
+    strategy: 'jwt', 
   },
 });

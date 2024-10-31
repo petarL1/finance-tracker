@@ -4,58 +4,52 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6); /* Slightly darker for more contrast */
-    backdrop-filter: blur(8px); /* Stronger blur effect */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ensure modal is on top */
+    z-index: 1000;
   }
 
   .modalOverlay img {
     max-width: 100%;
     height: auto;
-    margin: 10px 0; /* Adds some space above and below the image */
-    padding: 5px; /* Adds space inside the image border */
-}
-
-  
+    margin: 10px 0;
+    padding: 5px;
+}  
   .modalContent {
     background: white;
-    padding: 30px; /* Increased padding for a more spacious feel */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Deeper shadow for depth */
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     max-width: 600px;
-    width: 90%; /* Full width on small screens */
-    margin: 0 10px; /* Margins for smaller screens */
-    max-height: 80vh; /* Set maximum height */
-    overflow-y: auto; /* Enable vertical scrolling */
+    width: 90%;
+    margin: 0 10px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
-
-  
-  /* Responsive text size */
+ 
   .modalContent h2 {
-    font-size: 1.8em; /* Larger font size for headings */
-    margin-bottom: 10px; /* Space below the heading */
+    font-size: 1.8em;
+    margin-bottom: 10px;
   }
   
   .modalContent p {
-    font-size: 1em; /* Adjust font size for paragraphs */
-    line-height: 1.5; /* Increased line height for better readability */
+    font-size: 1em;
+    line-height: 1.5;
   }
-  
-  /* Close button */
+ 
   .modalContent button {
-    background-color: rgb(141, 141, 141); /* Red background for close button */
-    color: white; /* White text */
-    border: none; /* Remove border */
-    padding: 10px 15px; /* Some padding */
-    cursor: pointer; /* Pointer cursor */
-    border-radius: 5px; /* Rounded corners */
-    margin-top: 20px; /* Spacing above */
-    transition: background-color 0.3s; /* Smooth transition */
+    background-color: rgb(141, 141, 141);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
   }
   
   .modalContent button:hover {
-    background-color: rgb(126, 126, 126); /* Darker red on hover */
+    background-color: rgb(126, 126, 126);
   }
-  

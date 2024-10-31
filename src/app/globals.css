@@ -2,33 +2,16 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
 @import url('https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,600i,700,700i,800,800i&display=swap');
+@import'leaflet/dist/leaflet.css';
 
 html, body {
-  height: 100%; /* Ensures the body takes up the full height of the page */
-  margin: 0;
+  height: 100%;
   padding: 0;
   display: flex;
   flex-direction: column;
   background-color: rgb(255, 255, 255);
-  color: darkblue;
   font-family: 'Poppins', sans-serif;
-  line-height: 1.80857;
   overflow-x: hidden;
-}
-
-#__next {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-main {
-  flex: 1; /* Allows the main content to take up all remaining space */
-  padding: 1rem;
-}
-
-.body-wrapper{
-  margin: 0 4rem;
 }
 
 .errorHeading{

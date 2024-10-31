@@ -1,12 +1,9 @@
-/* Container for the form and transaction list */
 .container {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  flex-wrap: wrap; /* Allow wrapping for small screens */
+  flex-wrap: wrap;
 }
-
-/* Form styling */
 .form {
   display: flex;
   flex-direction: column;
@@ -33,7 +30,7 @@
   margin-bottom: 8px;
 }
 
-/* Inputs styling */
+
 .formInput, .formSelect {
   padding: 12px;
   border: 1px solid #ddd;
@@ -56,28 +53,50 @@
   align-items: center;
   font-size: 16px;
   cursor: pointer;
-  position: relative; /* Added for pseudo-elements */
+  position: relative;
   gap:7px;
 }
 
-.squareButton {
-  width: 40px;
-  height: 40px;
-  border: 2px solid #0070f3;
-  border-radius: 8px;
+.expenseButton,
+.incomeButton {
+  width: 30px;
+  height: 30px;
+  border: 2px solid transparent;
+  border-radius: 50px;
   display: flex;
-  transition: background-color 0.3s, border-color 0.3s;
+  background-color: white;
+  cursor: pointer;
+  color: black;
+  transition: background-color 0.3s ease;
 }
 
-.transactionTypeLabel.active .squareButton {
-  background-color: #0070f3; /* Fill blue when active */
-  border-color: #0070f3; /* Match border color */
+.expenseButton{
+  border-color: lightcoral;
 }
-/* Hide the original radio button */
+
+.incomeButton{
+  border-color: lightgreen;
+}
+
+.transactionTypeLabel.active .expenseButton {
+  background-color: lightcoral;
+}
+
+.transactionTypeLabel.active .incomeButton {
+  background-color: lightgreen;
+}
+
+.incomeButton:hover {
+  background-color: rgba(144, 238, 144, 0.288);
+}
+
+.expenseButton:hover {
+  background-color: rgba(139, 0, 0, 0.26);
+}
+
 .hiddenRadio {
   display: none;
 }
-
 
 .formFields {
   display: flex;
@@ -136,42 +155,20 @@
 }
 
 .amountInputWrapper input[type="number"] {
-  flex-grow: 1; /* Allows the input to take available space */
-  padding-right: 60px; /* Space for the dropdown */
-  border: 1px solid #ddd; /* Keep the border */
-  border-radius: 8px 0 0 8px; /* Rounded corners on the left */
-  border-right: none; /* Remove right border */
+  flex-grow: 1;
+  padding-right: 60px;
+  border: 1px solid #ddd;
+  border-radius: 8px 0 0 8px;
   font-size: 16px;
-  outline: none; /* Remove default outline */
-  -moz-appearance: textfield; /* Firefox */
+  outline: none;
+  -moz-appearance: textfield;
   appearance: textfield;
 }
 
 .amountInputWrapper input[type="number"]::-webkit-inner-spin-button,
 .amountInputWrapper input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none; /* Hide arrows */
-  margin: 0; /* Remove margin */
-}
-
-/* Style for the currency selector */
-.currencySelect {
-  -moz-appearance: none; /* Firefox */
-  -webkit-appearance: none; /* Safari and Chrome */
-  appearance: none; /* Remove default styling in most browsers */
-  border: 1px solid #ddd; /* Keep the border */
-  border-left: none;
-  padding: 10px; /* Adjust padding for a consistent look */
-  border-radius: 0 8px 8px 0; /* Rounded corners on the right */
-  background-color: #fff; /* Same background as input */
-  font-size: 16px;
-  color: #333;
-  cursor: pointer;
-  outline: none; /* Remove default outline */
-  margin-left: -1px; /* Align with input without gap */
-}
-
-.currencySelect:hover{
-  text-decoration: none;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .buttonContainer {
@@ -199,13 +196,10 @@
   background-color: #1e7e34;
   transform: translateY(0);
 }
-
-
-/* Media Queries */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
-    gap: 10px; /* Adjust gap for smaller screens */
+    gap: 10px;
   }
 
   .form{
@@ -232,6 +226,6 @@
   }
 
   .transactionList {
-    margin: 0 auto; /* Center the transaction list */
+    margin: 0 auto;
   }
 }

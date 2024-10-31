@@ -1,28 +1,18 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import styles from './Profile.module.css';
-import TransactionForm from '../../components/TransactionForm';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { format, parseISO, isThisYear } from 'date-fns';
-import BalanceChart from '../../components/BalanceChart';
-import CategoryChart from '../../components/CategoryChart';
-import { FaEdit, FaTrash } from 'react-icons/fa'; // Import icons
-import CurrencySwitcher from '../../components/CurrencySwitcher';
-
-interface Transaction {
-  _id: string;
-  userId: string;
-  date: string;
-  description: string;
-  amount: number;
-  category: string;
-  type: 'expense' | 'income';
-  currency: 'USD' | 'EUR' | 'MKD';
-}
+import CategoryChart from './components/CategoryChart';
+import { FaEdit, FaTrash } from 'react-icons/fa'; 
+import CurrencySwitcher from './components/CurrencySwitcher';
+import { Transaction } from '../../../models/Transaction';
+import Pagination from './components/Pagination';
+import BalanceChart from './components/BalanceChart';
+import TransactionForm from './components/TransactionForm';
 
 interface UserSession {
   userId: string;
@@ -30,12 +20,11 @@ interface UserSession {
 }
 
 export interface BalanceDataPoint {
-  date: string; // Date of the transaction
-  amount: number; // Amount of the transaction
-  type: 'income' | 'expense'; // Type of the transaction
-  currency: 'USD' | 'EUR' | 'MKD'; // Currency type
+  date: string; 
+  amount: number; 
+  type: 'income' | 'expense'; 
+  currency: 'USD' | 'EUR' | 'MKD'; 
 }
-
 
 const exchangeRates = {
   USD: 1,
@@ -59,9 +48,11 @@ const Profile: React.FC = () => {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [transactionsPerPage] = useState<number>(5);
+  const maxPageButtons = 5;
   const [paginatedTransactions, setPaginatedTransactions] = useState<Transaction[]>([]);
   const [balanceData, setBalanceData] = useState<BalanceDataPoint[]>([]);
   const [selectedCurrency, setSelectedCurrency] = useState<'USD' | 'EUR' | 'MKD'>('USD');
+  const totalPages = Math.ceil(transactions.length / transactionsPerPage);
 
   const fetchUser = () => {
     const token = localStorage.getItem('token');
@@ -85,8 +76,8 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    paginateTransactions(transactions); // Call this whenever transactions change
-  }, [transactions, currentPage]); // Include currentPage as a dependency  
+    paginateTransactions(transactions); 
+  }, [transactions, currentPage]); 
 
   useEffect(() => {
     fetchUser();
@@ -100,10 +91,9 @@ const Profile: React.FC = () => {
   }, []);  
 
   const handleCurrencyChange = (newCurrency: 'USD' | 'EUR' | 'MKD') => {
-    setSelectedCurrency(newCurrency); // Update the selected currency
-    localStorage.setItem('selectedCurrency', newCurrency); // Store it in local storage
+    setSelectedCurrency(newCurrency); 
+    localStorage.setItem('selectedCurrency', newCurrency); 
   };
-
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -114,14 +104,13 @@ const Profile: React.FC = () => {
       try {
         const response = await axios.get(`/api/users/${user.userId}/transactions`);
         const allTransactions = response.data.transactions || [];
-        console.log('Fetched Transactions:', allTransactions); // Log the fetched transactions
   
         setTransactions(allTransactions.sort((a: { date: string | number | Date; }, b: { date: string | number | Date; }) => 
           new Date(b.date).getTime() - new Date(a.date).getTime()
         ));
         
         paginateTransactions(allTransactions);
-        calculateBalance(allTransactions); // Recalculate balance after fetching transactions
+        calculateBalance(allTransactions); 
       } catch (error) {
         setError('Failed to fetch transactions.');
       } finally {
@@ -135,7 +124,7 @@ const Profile: React.FC = () => {
   const convertCurrency = (amount: number, fromCurrency: 'USD' | 'EUR' | 'MKD', toCurrency: 'USD' | 'EUR' | 'MKD') => {
     if (!amount || typeof amount !== 'number' || isNaN(amount)) {
       console.error('Invalid amount for currency conversion:', amount);
-      return 0; // Default to 0 if amount is invalid
+      return 0; 
     }
     const conversionRate = exchangeRates[toCurrency] / exchangeRates[fromCurrency];
     return parseFloat((amount * conversionRate).toFixed(2));
@@ -154,15 +143,15 @@ const generateBalanceData = (transactions: Transaction[]): BalanceDataPoint[] =>
   let cumulativeBalance = 0;
 
   return transactions.map((transaction) => {
-    const convertedAmount = transaction.amount; // Use the original amount
+    const convertedAmount = transaction.amount; 
     cumulativeBalance += transaction.type === 'income' ? convertedAmount : -convertedAmount;
 
     return {
       date: formatTransactionDate(transaction.date),
-      amount: convertedAmount, // Include the original amount
+      amount: convertedAmount, 
       type: transaction.type,
       currency: transaction.currency,
-      balance: cumulativeBalance, // Include cumulative balance
+      balance: cumulativeBalance, 
     };
   });
 };
@@ -172,73 +161,61 @@ const generateBalanceData = (transactions: Transaction[]): BalanceDataPoint[] =>
     const endIndex = startIndex + transactionsPerPage;
     setPaginatedTransactions(allTransactions.slice(startIndex, endIndex));
   };
+  
 
   useEffect(() => {
     if (transactions.length > 0) {
-      calculateBalance(transactions, selectedCurrency); // Update balance
-      generateBalanceData(transactions); // Update chart data
+      calculateBalance(transactions, selectedCurrency); 
+      generateBalanceData(transactions); 
     }
   }, [transactions, selectedCurrency]);
-  
-  
+    
 const handleAddTransaction = async (transaction: Omit<Transaction, "_id">) => {
   try {
-      // Use the amount directly without converting
       const response = await axios.post(`/api/users/${user?.userId}/add`, {
           ...transaction,
-          // Remove conversion; store amount as it is
       });
 
       const newTransaction = response.data;
-
-      // Ensure valid response
       if (!newTransaction || !newTransaction.amount || !newTransaction.category || !newTransaction.type) {
           throw new Error('Invalid transaction received from the server.');
-      }
-
-      // Add the new transaction to state
+      }      
       setTransactions((prevTransactions) => {
           const updatedTransactions = [newTransaction, ...prevTransactions];
-          calculateBalance(updatedTransactions, selectedCurrency); // Recalculate balance using original amounts
-          paginateTransactions(updatedTransactions); // Update pagination after adding
+          calculateBalance(updatedTransactions, selectedCurrency); 
+          paginateTransactions(updatedTransactions); 
           return updatedTransactions;
       });
   } catch (err) {
       console.error(err);
       setError('Failed to add transaction.');
   }
-};
+};  
 
-  
 const handleUpdateTransaction = async (transaction: Transaction) => {
   try {
-    let amountToSave = transaction.amount; // Start with the existing amount
+    let amountToSave = transaction.amount; 
     const originalTransaction = transactions.find(t => t._id === transaction._id);
 
     if (!originalTransaction) {
       throw new Error('Original transaction not found.');
     }
 
-    // Check if the currency has changed during the edit
     if (transaction.currency !== originalTransaction.currency) {
-      // Convert the amount back to the original currency to avoid double conversion
-      amountToSave = convertCurrency(
+        amountToSave = convertCurrency(
         transaction.amount, 
         transaction.currency, 
-        originalTransaction.currency // Convert to original currency first
-      );
-
-      // Then convert it to USD if needed
+        originalTransaction.currency 
+      );     
       amountToSave = convertCurrency(
         amountToSave,
         originalTransaction.currency,
-        'USD' // Save it as USD in the database
+        'USD' 
       );
     }
-
     const response = await axios.put(`/api/users/${user?.userId}/transactions/${transaction._id}`, {
       ...transaction,
-      amount: amountToSave, // Save the correct amount in USD
+      amount: amountToSave, 
     });
 
     const updatedTransaction = response.data;
@@ -248,17 +225,16 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
         t._id === updatedTransaction._id ? updatedTransaction : t
       );
       calculateBalance(updatedTransactions, selectedCurrency);
-      paginateTransactions(updatedTransactions); // Update pagination after update
+      paginateTransactions(updatedTransactions); 
       return updatedTransactions;
     });
 
-    setEditingTransaction(null); // Stop editing mode
+    setEditingTransaction(null); 
   } catch (err) {
     console.error(err);
     setError('Failed to update transaction.');
   }
 };
-
   
   const handleDeleteTransaction = async (transactionId: string) => {
     try {
@@ -267,7 +243,7 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
       setTransactions((prevTransactions) => {
         const updatedTransactions = prevTransactions.filter((t) => t._id !== transactionId);
         calculateBalance(updatedTransactions, selectedCurrency);
-        paginateTransactions(updatedTransactions); // Update pagination after delete
+        paginateTransactions(updatedTransactions); 
         return updatedTransactions;
       });
     } catch (err) {
@@ -275,35 +251,29 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
       setError('Failed to delete transaction.');
     }
   };
-  
+
   const handleEditTransaction = (transaction: Transaction) => {
-    // Assuming you have a function to handle currency conversion
     const convertCurrency = (amount: number, fromCurrency: string, toCurrency: string): number => {
-      if (fromCurrency === toCurrency) return amount; // No conversion needed
+      if (fromCurrency === toCurrency) return amount; 
       const rateFrom = exchangeRates[fromCurrency];
       const rateTo = exchangeRates[toCurrency];
-      return (amount / rateFrom) * rateTo; // Conversion formula
-    };
-  
-    // Convert the transaction amount to the selected currency
-    const convertedAmount = convertCurrency(transaction.amount, transaction.currency, selectedCurrency);
-  
-    // Set the edited transaction with the amount in the current view's currency
+      return (amount / rateFrom) * rateTo; 
+    };    
+    const convertedAmount = convertCurrency(transaction.amount, transaction.currency, selectedCurrency);    
     setEditingTransaction({
       ...transaction,
-      amount: convertedAmount,   // Update the amount to be in the selected currency
-      currency: selectedCurrency, // Set the currency to the selected view currency
+      amount: convertedAmount,   
+      currency: selectedCurrency, 
     });
   };
   
   useEffect(() => {
     if (transactions.length > 0) {
-      calculateBalance(transactions, selectedCurrency); // Update balance with conversion
-      setBalanceData(generateBalanceData(transactions)); // Update chart data
+      calculateBalance(transactions, selectedCurrency); 
+      setBalanceData(generateBalanceData(transactions)); 
     }
   }, [transactions, selectedCurrency]);
 
-  
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -338,7 +308,7 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
                 onAddTransaction={editingTransaction ? handleUpdateTransaction : handleAddTransaction}
                 onUpdateBalance={() => calculateBalance(transactions, selectedCurrency)}
                 initialTransaction={editingTransaction || undefined}
-                selectedCurrency={selectedCurrency} // Ensure this is passed
+                selectedCurrency={selectedCurrency} 
                 currencyRates={exchangeRates}
               />
 
@@ -359,38 +329,30 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
                       </div>
                     </div>
                   ))}
-                {Array.from({ length: transactionsPerPage - paginatedTransactions.length }).map((_, idx) => (
-                  <div key={`placeholder-${idx}`} className={styles.transactionItem}>
-                    <div className={styles.transactionDetails}>
-                      <p className={styles.placeholder}>&nbsp;</p>
-                      <p className={`${styles.amount} ${styles.placeholder}`}>&nbsp;</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-  
-              <div className={styles.pagination}>
-                {Array.from({ length: Math.ceil(transactions.length / transactionsPerPage) }, (_, idx) => (
-                  <button
-                    key={idx}
-                    className={`${styles.pageButton} ${currentPage === idx + 1 ? styles.activePage : ''}`}
-                    onClick={() => setCurrentPage(idx + 1)}
-                  >
-                    {idx + 1}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+               {paginatedTransactions.length === 0 && (
+        <div className={styles.placeholder}>
+          <p>You will see your recent transactions here.</p>
         </div>
+      )}
+    </div>
+    {totalPages > 1 && (
+            <Pagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}</>
+  )}
+      </div>
+        {transactions.length > 0 && (
       <div className={styles.charts}>
         <h2 className={styles.chartsHeading}>View your progress over time!</h2>
       <BalanceChart data={balanceData} selectedCurrency={selectedCurrency} exchangeRates={exchangeRates} />
       <CategoryChart data={transactions} selectedCurrency={selectedCurrency} currencyRates={exchangeRates} />
       </div>
+        )}
       </div>
       </div>
   );
-  
 }
   export default Profile;

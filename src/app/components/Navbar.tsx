@@ -1,4 +1,4 @@
-'use client';  // This ensures the component runs on the client-side
+'use client';  
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -8,16 +8,15 @@ import { useAuth } from '../../context/AuthContext';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { session } = useAuth(); // Get session state from AuthContext
+  const { session } = useAuth(); 
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <Link href="/"><Image src="/logo.png" alt="CashFlow" width={50} height={50} />
+        <Link href="/"><Image src="/logo.png" alt="CashFlow" width={70} height={70} />
         CashFlow
         </Link>
       </div>
@@ -48,7 +47,6 @@ const Navbar: React.FC = () => {
         </ul>
       </nav>
       <button className={styles.hamburger} onClick={toggleMenu}>
-        {/* Hamburger Icon */}
         <span className={styles.bar}></span>
         <span className={styles.bar}></span>
         <span className={styles.bar}></span>

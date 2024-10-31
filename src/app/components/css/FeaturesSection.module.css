@@ -1,112 +1,115 @@
 .featuresSection {
   padding: 60px;
-  background-color: #3b86db; /* Main background color */
+  background-color: #3b86db;
 }
 
 .sectionTitle {
   text-align: center;
-  font-size: 2.5rem; /* Title size */
-  margin-bottom: 50px; /* Space below title */
-  padding-bottom: 10px; /* Space below title */
-  font-weight: bold; /* Bold title */
-  color: #ffffff; /* Title color */
-  border-bottom: 1px solid white; /* Title underline */
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  padding-bottom: 10px;
+  font-weight: bold;
+  color: #ffffff;
+  border-bottom: 1px solid white;
 }
 
 .featuresList {
-  display: flex; /* Use flexbox for alignment */
-  flex-direction: column; /* Stack features vertically */
-  gap: 60px; /* Space between features */
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
 }
 
 .featureItem {
-  display: flex; /* Align content horizontally */
-  align-items: center; /* Center items vertically */
-  justify-content: space-between; /* Space between content */
-  gap: 30px; /* Space between image and content */
-  transform: translateY(10px); /* Initial transform for hover effect */
-  transition: opacity 0.6s ease, transform 0.6s ease; /* Transition effects */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .featureItem:hover {
-  opacity: 1; /* Full opacity on hover */
-  transform: translateY(0); /* Reset translate on hover */
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .imageContainer {
-  display: flex; /* Flex container for images */
-  gap: 15px; /* Space between images */
+  display: flex;
+  gap: 15px;
 }
 
 .desktopFrame {
-  border: 2px solid #ffffff; /* Frame color */
-  border-radius: 8px; /* Rounded corners */
-  overflow: hidden; /* Hide overflow */
-  background-color: rgba(255, 255, 255, 0.1); /* Slight background color */
-  padding: 10px; /* Inner padding for frames */
-  width: 280px; /* Width of the monitor frame */
-  height: 280px; /* Height to create a square look */
-  display: flex; /* Flex for inner content */
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  width: 400px;
+  height: 340px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .mobileFrame {
-  border: 2px solid #ffffff; /* Frame color */
-  border-radius: 8px; /* Rounded corners */
-  overflow: hidden; /* Hide overflow */
-  background-color: rgba(255, 255, 255, 0.1); /* Slight background color */
-  padding: 10px; /* Inner padding for frames */
-  max-width: 120px;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  max-width: 140px;
 }
 
 .featureImage {
-  max-width: 100%; /* Use full width within the frame */
-  max-height: 100%; /* Use full height within the frame */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 5px; /* Rounded image corners */
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  border-radius: 5px;
 }
 
 .featureContent {
-  flex: 1; /* Allow content to take up remaining space */
-  text-align: left; /* Align text left */
+  flex: 1;
+  text-align: left;
 }
 
 .featureTitle {
-  font-size: 2rem; /* Title size */
-  font-weight: bold; /* Bold title */
-  margin-bottom: 20px; /* Space below title */
-  color: #ffffff; /* Title color */
-  transition: color 0.3s ease; /* Color transition */
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #ffffff;
+  transition: color 0.3s ease;
 }
 
 .featureItem:hover .featureTitle {
-  color: #ffffff; /* Maintain white color on hover */
+  color: #ffffff;
 }
 
 .featureDescription {
-  font-size: 1.2rem; /* Description size */
-  color: #ffffff; /* Description color */
-  line-height: 1.6; /* Line height for readability */
+  font-size: 1.2rem;
+  color: #ffffff;
+  line-height: 1.6;
 }
 
 @media (max-width: 768px) {
   .featureItem {
-    flex-direction: column; /* Stack features vertically on mobile */
-    text-align: center; /* Center text */
+    flex-direction: column;
+    text-align: center;
   }
 
   .imageContainer {
-    flex-direction: column; /* Stack images vertically */
-    align-items: center; /* Center images */
-    gap: 10px; /* Space between images */
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 
   .featureTitle {
-    font-size: 1.5rem; /* Smaller title size for mobile */
+    font-size: 1.5rem;
   }
   
   .featureDescription {
-    font-size: 1rem; /* Smaller description size for mobile */
+    font-size: 1rem;
+  }
+  .desktopFrame {
+    display: none;
   }
 }

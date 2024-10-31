@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { connectToDatabase } from '../lib/mongodb'; // Adjust the import path if necessary
-import { User } from '../lib/types';
+import { User } from '../models/User';
 
 interface UserContextType {
   user: User | null;

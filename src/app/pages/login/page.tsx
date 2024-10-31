@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import styles from './Login.module.css';
 import { useRouter } from 'next/navigation';
@@ -15,27 +14,20 @@ const LoginPage = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('/api/auth/login', { // Ensure the correct endpoint
+      const response = await fetch('/api/auth/login', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
       });
-
       const data = await response.json();
-      console.log('Login response:', data); // Log the response
-
       if (response.ok) {
         localStorage.setItem('token', data.token);
 
         setSuccess('Login successful.');
         setError('');
-
-        // Redirect after login
-        router.push('/pages/profile'); // Adjust path as per your routing structure
-
-        // Clear input fields after a successful login
+        router.push('/pages/profile');        
         setUsername('');
         setPassword('');
       } else {
@@ -45,10 +37,8 @@ const LoginPage = () => {
     } catch (err) {
       setError('An error occurred. Please try again.');
       setSuccess('');
-    }
-  };
-
-  return (
+    }};  
+    return (
     <div className={styles.loginContainer}>
       <div className={styles.loginBox}>
         <h1 className={styles.title}>Login</h1>
@@ -79,8 +69,7 @@ const LoginPage = () => {
           <button className={styles.createAccount} onClick={() => router.push('/pages/register')}>Create an account</button>
         </div>
       </div>
-    </div>
-  );
+    </div>);
 };
 
 export default LoginPage;

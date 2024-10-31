@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ArticleModal from './ArticleModal';
-import styles from './css/Educational.module.css'; // Adjust path as necessary
-
-interface Article {
-  title: string;
-  slug: string;
-  content: string | null;
-  references: string[]; // Array of reference strings
-}
+import styles from './css/Educational.module.css'; 
+import { Article } from '../../models/Article';
 
 const Educational: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -17,10 +11,9 @@ const Educational: React.FC = () => {
     references: [],
   });
   const [posts, setPosts] = useState<Article[]>([]);
-
   useEffect(() => {
     const fetchArticles = async () => {
-      const response = await fetch('/api/articles'); // Fetch articles from your API
+      const response = await fetch('/api/articles'); 
       const data = await response.json();
       setPosts(data);
     };
@@ -35,7 +28,6 @@ const Educational: React.FC = () => {
       setModalOpen(true);
     }
   };
-
   const closeModal = () => {
     setModalOpen(false);
     setSelectedPost({ title: '', content: null, references: [] });
@@ -52,16 +44,14 @@ const Educational: React.FC = () => {
           </div>
         ))}
       </div>
-
       <ArticleModal
         isOpen={modalOpen}
         onClose={closeModal}
         title={selectedPost.title}
         content={selectedPost.content}
-        references={selectedPost.references} // Pass references to the modal
+        references={selectedPost.references} 
       />
     </section>
   );
 };
-
 export default Educational;

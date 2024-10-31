@@ -4,7 +4,6 @@ import styles from './css/BalanceChart.module.css';
 import 'chartjs-adapter-date-fns';
 
 Chart.register(...registerables);
-
 interface BalanceDataPoint {
   date: string;
   amount: number;
@@ -15,9 +14,8 @@ interface BalanceDataPoint {
 interface BalanceChartProps {
   data: BalanceDataPoint[];
   selectedCurrency: 'USD' | 'EUR' | 'MKD';
-  exchangeRates: { [key: string]: number };
+  exchangeRates:{ [key: string]: number };
 }
-
 const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exchangeRates }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -27,34 +25,24 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exc
     toCurrency: 'USD' | 'EUR' | 'MKD'
   ) => {
     if (fromCurrency === toCurrency) return amount;
-
     const fromRate = exchangeRates[fromCurrency];
     const toRate = exchangeRates[toCurrency];
-
     return (amount / fromRate) * toRate;
   };
-
   const normalizeData = (data: BalanceDataPoint[], selectedCurrency: 'USD' | 'EUR' | 'MKD', exchangeRates: { [key: string]: number }) => {
     let cumulativeBalance = 0;
     const result: { date: string; balance: number }[] = [];
   
-    // Sort transactions by date
     data.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
     data.forEach(item => {
-      // Normalize the amount based on the item type
       const adjustedAmount = item.type === 'income' ? item.amount : -item.amount;
-      const normalizedAmount = convertAmount(adjustedAmount, item.currency, selectedCurrency);
-  
-      // Update cumulative balance correctly
-      cumulativeBalance += normalizedAmount;
-  
-      // Store the date and cumulative balance
+      const normalizedAmount = convertAmount(adjustedAmount, item.currency, selectedCurrency);      
+      cumulativeBalance += normalizedAmount;      
       result.push({ date: item.date, balance: cumulativeBalance });
     });
-  
     return result;
   };
+
   useEffect(() => {
     const ctx = canvasRef.current;
     if (!ctx) return;
@@ -63,29 +51,19 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exc
     if (chartInstance) {
       chartInstance.destroy();
     }
-
-    // Normalize data based on selected currency
-    const normalizedData = normalizeData(data, selectedCurrency, exchangeRates);
-    
-    // Log the normalized data for verification
+    const normalizedData = normalizeData(data, selectedCurrency, exchangeRates);   
         
     if (normalizedData.length === 0) {
       console.error("No balance data to display");
       return;
-    }
-
-    // Directly use normalizedData for the balanceData
+    }    
     const balanceData = normalizedData.map(item => ({
       date: new Date(item.date).toISOString(),
-      balance: Math.round(item.balance * 100) / 100, // Round the balance
+      balance: Math.round(item.balance * 100) / 100, 
     }));
-
-    // Log the final values for verification
-    
-    // Dynamically calculate the suggested min and max for the y-axis
     const minBalance = Math.min(...balanceData.map(entry => entry.balance));
     const maxBalance = Math.max(...balanceData.map(entry => entry.balance));
-    const padding = (maxBalance - minBalance) * 0.1; // Add 10% padding
+    const padding = (maxBalance - minBalance) * 0.1; 
 
     new Chart(ctx, {
       type: 'line',
@@ -108,7 +86,7 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exc
             type: 'time',
             time: {
               unit: 'day',
-              tooltipFormat: 'MMM D, YYYY',
+              tooltipFormat: 'MMM d, YYYY',
               displayFormats: {
                 day: 'MMM d'
               }
@@ -123,26 +101,20 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exc
             ticks: {
               callback: (value) => `${value.toLocaleString()} ${selectedCurrency}`,
             },
-          },
-        },
-      },
+          },},},
     });
-
     return () => {
       if (chartInstance) chartInstance.destroy();
     };
   }, [data, selectedCurrency, exchangeRates]);
 
-
   if (data.length === 0) {
-    return <div>No data available for chart.</div>;
-  }
+    return <div>no data</div>;}
 
   return (
     <div className={styles.chartContainer}>
       <canvas ref={canvasRef} className={styles.lineChart}></canvas>
     </div>
-  );
-};
+  );};
 
 export default BalanceChart;

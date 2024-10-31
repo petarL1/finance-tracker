@@ -1,4 +1,4 @@
-/* Container for centering the registration box */
+
 .registerContainer {
     display: flex;
     align-items: center;
@@ -7,7 +7,6 @@
     background: linear-gradient(135deg, #6e8efb, #a777e3);
   }
   
-  /* Styling the registration box */
   .registerBox {
     background: white;
     padding: 2rem;
@@ -17,26 +16,22 @@
     max-width: 400px;
   }
   
-  /* Title styling */
-  .title {
+   .title {
     margin-bottom: 1rem;
     font-size: 2rem;
     text-align: center;
   }
-  
-  /* Form styling */
+   
   .registerForm {
     display: flex;
     flex-direction: column;
   }
-  
-  /* Form labels */
+ 
   .label {
     margin-bottom: 0.5rem;
     font-weight: bold;
   }
   
-  /* Form inputs */
   .input {
     padding: 0.75rem;
     margin-bottom: 1rem;
@@ -45,7 +40,6 @@
     font-size: 1rem;
   }
   
-  /* Submit button */
   .submitButton {
     background-color: #5a7bfb;
     color: white;
@@ -60,8 +54,7 @@
   .submitButton:hover {
     background-color: #6e8efb;
   }
-  
-  /* Error message styling */
+ 
   .error {
     color: #ff4d4d;
     margin-bottom: 1rem;
@@ -89,9 +82,7 @@
     align-items: center;
     display: flex;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 600px) {
+    @media (max-width: 600px) {
     .registerBox {
       padding: 1.5rem;
     }
