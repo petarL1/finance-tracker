@@ -4,6 +4,7 @@ import styles from './css/BalanceChart.module.css';
 import 'chartjs-adapter-date-fns';
 
 Chart.register(...registerables);
+
 interface BalanceDataPoint {
   date: string;
   amount: number;
@@ -14,8 +15,9 @@ interface BalanceDataPoint {
 interface BalanceChartProps {
   data: BalanceDataPoint[];
   selectedCurrency: 'USD' | 'EUR' | 'MKD';
-  exchangeRates:{ [key: string]: number };
+  exchangeRates: { [key: string]: number };
 }
+
 const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exchangeRates }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -29,7 +31,8 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exc
     const toRate = exchangeRates[toCurrency];
     return (amount / fromRate) * toRate;
   };
-  const normalizeData = (data: BalanceDataPoint[], selectedCurrency: 'USD' | 'EUR' | 'MKD', exchangeRates: { [key: string]: number }) => {
+
+  const normalizeData = (data: BalanceDataPoint[], selectedCurrency: 'USD' | 'EUR' | 'MKD') => {
     let cumulativeBalance = 0;
     const result: { date: string; balance: number }[] = [];
   
@@ -47,25 +50,27 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exc
     const ctx = canvasRef.current;
     if (!ctx) return;
 
-    const chartInstance = Chart.getChart(ctx);
+    let chartInstance = Chart.getChart(ctx); 
     if (chartInstance) {
       chartInstance.destroy();
     }
-    const normalizedData = normalizeData(data, selectedCurrency, exchangeRates);   
-        
+
+    const normalizedData = normalizeData(data, selectedCurrency);
     if (normalizedData.length === 0) {
       console.error("No balance data to display");
       return;
-    }    
+    }
+
     const balanceData = normalizedData.map(item => ({
       date: new Date(item.date).toISOString(),
       balance: Math.round(item.balance * 100) / 100, 
     }));
+
     const minBalance = Math.min(...balanceData.map(entry => entry.balance));
     const maxBalance = Math.max(...balanceData.map(entry => entry.balance));
-    const padding = (maxBalance - minBalance) * 0.1; 
+    const padding = (maxBalance - minBalance) * 0.1;
 
-    new Chart(ctx, {
+    chartInstance = new Chart(ctx, {
       type: 'line',
       data: {
         labels: balanceData.map(entry => entry.date),
@@ -101,20 +106,27 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data, selectedCurrency, exc
             ticks: {
               callback: (value) => `${value.toLocaleString()} ${selectedCurrency}`,
             },
-          },},},
+          },
+        },
+      },
     });
+
     return () => {
-      if (chartInstance) chartInstance.destroy();
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
     };
   }, [data, selectedCurrency, exchangeRates]);
 
   if (data.length === 0) {
-    return <div>no data</div>;}
+    return <div>No data</div>;
+  }
 
   return (
     <div className={styles.chartContainer}>
       <canvas ref={canvasRef} className={styles.lineChart}></canvas>
     </div>
-  );};
+  );
+};
 
 export default BalanceChart;

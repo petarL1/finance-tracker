@@ -28,7 +28,7 @@ const About: React.FC = () => {
             you will be able to stay informed of your financial situation, at all times.
           </p>
           <p>
-            The mission was to create a free to use finance tool which would virtually be useful to anyone. Don't prolong success any longer, sign up now!
+            The mission was to create a free to use finance tool which would virtually be useful to anyone. Don&apos;t prolong success any longer, sign up now!
           </p>
           <Link href="/" className={styles.link}>Back to Home
           </Link>

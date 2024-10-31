@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styles from './css/ArticleModal.module.css'; 
 
 interface ArticleModalProps {
@@ -8,25 +8,33 @@ interface ArticleModalProps {
   content: string | null;
   references: string[]; 
 }
-const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, title, content, references }) => {
-  if (!isOpen) return null;
 
-  const handleOverlayClick = (e: { target: any; currentTarget: any }) => {
+const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, title, content, references }) => {
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      onClose();
-    }
-  };
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    },
+    [onClose]
+  );
+
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [isOpen, handleKeyDown]);
+
+  if (!isOpen) return null;
 
   return (
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
@@ -38,12 +46,15 @@ const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, title, con
             <h3>References</h3>
             <ul>
               {references.map((reference, index) => (
-              <li key={index} dangerouslySetInnerHTML={{ __html: reference }} /> 
+                <li key={index} dangerouslySetInnerHTML={{ __html: reference }} /> 
               ))}
             </ul>
-          </div>)}
+          </div>
+        )}
         <button onClick={onClose}>Close</button>
       </div>
     </div>
-  );};
+  );
+};
+
 export default ArticleModal;

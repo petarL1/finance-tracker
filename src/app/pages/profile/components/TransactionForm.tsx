@@ -43,7 +43,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   
   const [date, setDate] = useState<string>(initialTransaction?.date || '');
   const [description, setDescription] = useState<string>(initialTransaction?.description || '');
-  const [amount, setAmount] = useState<number | ''>(''); 
+  const [amount, setAmount] = useState<number | ''>(initialTransaction?.amount || '');
   const [category, setCategory] = useState<string>(
     initialTransaction?.category || expenseCategories[0]
   );
@@ -98,7 +98,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       return;
     }
     const transaction = {
-      _id: initialTransaction?._id,
+      _id: initialTransaction ? initialTransaction._id : '',
       date,
       description,
       amount: Number(amount),  

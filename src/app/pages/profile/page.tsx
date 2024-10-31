@@ -70,11 +70,13 @@ const Profile: React.FC = () => {
   };
 
   const handleLogout = () => {
-    logout();
-    setUser(null);
-    router.push('/pages/login');
+    if (user) {
+      logout();
+      setUser(null);
+      router.push('/pages/login');
+    }
   };
-
+  
   useEffect(() => {
     paginateTransactions(transactions); 
   }, [transactions, currentPage]); 
@@ -121,7 +123,7 @@ const Profile: React.FC = () => {
     fetchTransactions();
   }, [user]);
 
-  const convertCurrency = (amount: number, fromCurrency: 'USD' | 'EUR' | 'MKD', toCurrency: 'USD' | 'EUR' | 'MKD') => {
+  const convertCurrency = (amount: number | undefined, fromCurrency: 'USD' | 'EUR' | 'MKD', toCurrency: 'USD' | 'EUR' | 'MKD') => {
     if (!amount || typeof amount !== 'number' || isNaN(amount)) {
       console.error('Invalid amount for currency conversion:', amount);
       return 0; 
@@ -252,13 +254,7 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
     }
   };
 
-  const handleEditTransaction = (transaction: Transaction) => {
-    const convertCurrency = (amount: number, fromCurrency: string, toCurrency: string): number => {
-      if (fromCurrency === toCurrency) return amount; 
-      const rateFrom = exchangeRates[fromCurrency];
-      const rateTo = exchangeRates[toCurrency];
-      return (amount / rateFrom) * rateTo; 
-    };    
+  const handleEditTransaction = (transaction: Transaction) => {  
     const convertedAmount = convertCurrency(transaction.amount, transaction.currency, selectedCurrency);    
     setEditingTransaction({
       ...transaction,
@@ -304,7 +300,7 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
           ) : (
             <>
              <TransactionForm
-                userId={user?.userId || ''}
+                userId={user ? user.userId : ''}
                 onAddTransaction={editingTransaction ? handleUpdateTransaction : handleAddTransaction}
                 onUpdateBalance={() => calculateBalance(transactions, selectedCurrency)}
                 initialTransaction={editingTransaction || undefined}
@@ -325,7 +321,7 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
                       </div>
                       <div className={styles.transactionActions}>
                         <FaEdit className={styles.editIcon} onClick={() => setEditingTransaction(transaction)} />
-                        <FaTrash className={styles.deleteIcon} onClick={() => handleDeleteTransaction(transaction._id)} />
+                        {transaction._id && (<FaTrash className={styles.deleteIcon} onClick={() => handleDeleteTransaction(transaction._id as string)} />)}
                       </div>
                     </div>
                   ))}
