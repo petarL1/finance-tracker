@@ -19,7 +19,6 @@
     overflow: hidden;
     z-index: 1;
     background-color: #0070F3;
-    max-height: 1000px;
   }
   
   .carouselImage {
@@ -51,6 +50,6 @@
 
   @media (min-width: 1000px) {
     .carouselImage{
-      max-height: 1000px;
+      max-height: 810px;
     }
   }

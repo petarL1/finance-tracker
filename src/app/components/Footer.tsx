@@ -38,12 +38,12 @@ const Footer: React.FC = () => {
         <div className={styles.socialSection}>
           <h4>Follow Us</h4>
           <div className={styles.socialIcons}>
-            <Link href="https://github.com/petarL1?tab=repositories" target='blank'>
+            <Link href="" target='blank'>
               
                 <i className="fa fa-github"></i>
               
             </Link>
-            <Link href="https://www.linkedin.com/in/petar-lefteroski-3aa52a206/" target='blank'>
+            <Link href="" target='blank'>
               
                 <i className="fa fa-linkedin"></i>
               

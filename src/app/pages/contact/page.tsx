@@ -54,12 +54,12 @@ const Contact: React.FC = () => {
           <div className={styles.socialLinks}>
             <ul>
               <li>
-                <a href="https://github.com/petarL1/finance-tracker" target="_blank" rel="noopener noreferrer">
+                <a href="" target="_blank" rel="noopener noreferrer">
                   <FaGithub /> GitHub
                 </a>
               </li>
               <li>
-                <a href="https://www.linkedin.com/in/petar-lefteroski-3aa52a206/" target="_blank" rel="noopener noreferrer">
+                <a href="" target="_blank" rel="noopener noreferrer">
                   <FaLinkedin /> LinkedIn
                 </a>
               </li>
