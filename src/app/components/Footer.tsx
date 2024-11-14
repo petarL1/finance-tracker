@@ -23,12 +23,12 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/about">
+              <Link href="/pages/about">
                 About Us
               </Link>
             </li>
             <li>
-              <Link href="/contact">
+              <Link href="/pages/contact">
                 Contact
               </Link>
             </li>
@@ -38,12 +38,12 @@ const Footer: React.FC = () => {
         <div className={styles.socialSection}>
           <h4>Follow Us</h4>
           <div className={styles.socialIcons}>
-            <Link href="" target='blank'>
+            <Link href="https://github.com/petarL1?tab=repositories" target='blank'>
               
                 <i className="fa fa-github"></i>
               
             </Link>
-            <Link href="" target='blank'>
+            <Link href="https://www.linkedin.com/feed/" target='blank'>
               
                 <i className="fa fa-linkedin"></i>
               

@@ -18,3 +18,7 @@ html, body {
   flex:1;
   text-align: center;
 }
+
+:root {
+  --navbar-height: 100px;  
+  --carousel-height: calc(100vh - var(--navbar-height));}
