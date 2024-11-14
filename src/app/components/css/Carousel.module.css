@@ -8,6 +8,10 @@
   background-color: #0070F3;
 }
 
+.carouselImage{
+  max-height: 530!important;
+}
+
 .carousel-item {
   height: 100%;
 }
@@ -41,12 +45,7 @@
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-@media (max-width: 1366px) {
-  .carouselImage {
-    max-height: 668px;
-}}
-
-@media (min-width: 1367px) {
+@media (min-width: 1500px) {
     .carouselImage {
       max-height: 810px;
     }
