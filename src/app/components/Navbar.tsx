@@ -10,15 +10,15 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { session } = useAuth(); 
   
-  // Ref to the navbar to detect clicks outside
+  
   const navbarRef = useRef<HTMLDivElement | null>(null);
   
-  // Toggle the menu open/close
+  
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
   
-  // Close menu if clicked outside of it
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
 
     document.addEventListener('click', handleClickOutside);
 
-    // Cleanup the event listener
+    
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };

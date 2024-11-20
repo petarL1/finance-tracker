@@ -1,54 +1,111 @@
 .carouselContainer {
   position: relative;
-  top: 0;
-  width: 100vw;
-  overflow: hidden;
-  height: var(--carousel-height);
-  z-index: 1;
-  background-color: #0070F3;
-}
-
-.carousel-item {
-  height: 100%;
-}
-
-.carousel-item img {
-  object-fit: cover;
-  height: 100%;
   width: 100%;
+  max-height: var(--carousel-height);
+  overflow: hidden;
+}
+
+.carouselItem {
+  position: relative;
+  width: 100%;
+  max-height: var(--carousel-height);
+}
+
+.carouselImageWrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.carouselImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 90vh;
+  object-fit: cover;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.carouselCaption {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  color: white;
+  text-align: center;
+  width: 90%;
+  padding: 10px;
 }
 
 .slideHeading {
   font-size: 2rem;
-  color: white;
 }
 
-.carouselImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.carousel-caption p {
+  font-size: 1rem;
 }
 
-.carousel-caption {
-  position: relative;
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--swiper-pagination-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.swiper-pagination-bullet {
+  width: 14px;
+  height: 14px;
+  background-color: gray;
+  opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+  width: 18px;
+  height: 18px;
+  background: var(--swiper-pagination-color);
+}
+
+.swiper-pagination {
+  bottom: 20px !important;
   z-index: 10;
-  color: white;
-  text-align: center;
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-  padding-top: 20px;
-  z-index: 1001;
-}
+@media (max-width: 768px) {
+  .carouselContainer {
+    height: auto; 
+  }
 
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-}
+  .slideHeading {
+    font-size: 1.5rem;
+  }
 
-@media (min-width: 1300px) {
-    .carouselImage {
-      max-height: 570px;
-    }
+  .carousel-caption p {
+    font-size: 0.875rem;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 35px;
+    height: 35px;
+  }
+
+  .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 16px;
+    height: 16px;
+  }
 }

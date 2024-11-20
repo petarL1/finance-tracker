@@ -21,4 +21,7 @@ html, body {
 
 :root {
   --navbar-height: 100px;  
-  --carousel-height: calc(100vh - var(--navbar-height));}
+  --carousel-height: calc(100vh - var(--navbar-height));
+  --swiper-pagination-color: rgb(255, 255, 255);
+  --swiper-navigation-color: rgb(255, 255, 255, 0.7);
+}

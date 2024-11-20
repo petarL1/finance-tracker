@@ -1,4 +1,4 @@
-/* Base styles */
+
 .header {
   position:fixed;
   top:0;
@@ -29,22 +29,22 @@
   max-height: 0;
   overflow: hidden;
   position: absolute;
-  top: 70px; /* Adjust depending on the header height */
+  top: 70px;
   right: 0;
-  width: 100%; /* Make the nav take up the full width */
-  background-color: #001f3f; /* Same background color as the header */
+  width: 100%;
+  background-color: #001f3f;
 }
 
 .nav ul {
   list-style-type: none;
   display: flex;
-  flex-direction: column; /* Stack items vertically in mobile view */
+  flex-direction: column;
   padding: 1rem 0;
   margin: 0;
 }
 
 .nav ul li {
-  text-align: left; /* Center-align the list items */
+  text-align: left;
 }
 
 .nav ul li a {
@@ -60,7 +60,7 @@
   color: #0088cc;
 }
 
-/* Hamburger button */
+
 .hamburger {
   display: none;
   flex-direction: column;
@@ -79,9 +79,9 @@
   transition: 0.4s ease;
 }
 
-/* Menu open animation */
+
 .nav.open {
-  max-height: 300px; /* Adjust based on content */
+  max-height: 300px;
   transition: max-height 0.4s ease-in-out;
 }
 
@@ -89,7 +89,7 @@
   flex-direction: column;
 }
 
-/* Add this to your CSS file */
+
 .profileButton {
   background: none;
   border: none;
@@ -97,12 +97,12 @@
   font-size: 1rem;
   cursor: pointer;
   padding: 0.75rem 1rem;
-  position: relative; /* Needed for dropdown positioning */
+  position: relative;
   transition: color 0.3s ease;
 }
 
 .profileButton:hover {
-  color: #0088cc; /* Or any color indicating hover state */
+  color: #0088cc;
 }
 
 .profileDropdown {
@@ -121,7 +121,7 @@
 }
 
 
-/* Mobile-specific styles */
+
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
@@ -134,14 +134,14 @@
     background-color: #001f3f;
     width: 100%;
     text-align: left;
-    max-height: 0; /* Initially hidden */
+    max-height: 0;
     transition: max-height 0.4s ease-in-out;
     overflow: hidden;
     z-index: 1000;
   }
 
   .nav.open {
-    max-height: 300px; /* Adjust according to content */
+    max-height: 300px;
   }
 
   .nav ul {
@@ -150,14 +150,14 @@
   }
 }
 
-/* Styles for larger screens */
+
 @media (min-width: 769px) {
   .nav {
     position: static;
     max-height: none;
     display: flex;
-    justify-content: flex-end; /* Pushes the items to the right */
-    background-color: transparent; /* No background color for desktop view */
+    justify-content: flex-end;
+    background-color: transparent;
   }
 
   .nav ul {
@@ -170,6 +170,6 @@
   }
 
   .hamburger {
-    display: none; /* Hide the hamburger in larger screens */
+    display: none;
   }
 }
