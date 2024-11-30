@@ -1,17 +1,14 @@
-.container {
+.pageContainer {
+  display: block;
+}
+
+.trackerContainer {
   display: flex;
   flex-direction: column;
   padding: 20px;
   width: 700px;
   margin: 0 auto;
   flex: 1;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
 }
 
 .logoutButton {
@@ -181,7 +178,7 @@
 }
 
 @media (max-width: 768px) {
-  .container {
+  .trackerContainer {
     width: 100%;
   }
   .card{
@@ -217,7 +214,7 @@
 }
 
 @media (min-width: 1500px) {
-  .container {
+  .trackerContainer {
     align-items: center;
     width: auto;
     margin: 0;

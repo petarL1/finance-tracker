@@ -1,4 +1,3 @@
-
 import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -17,16 +16,16 @@ async function connectToDatabase() {
 }
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     
-    if (!username || !password) {
-      return res.status(400).json({ message: 'Username and password are required.' });}
+    if (!email|| !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });}
     const db = await connectToDatabase();
-    const user = await db.collection('users').findOne({ username });
+    const user = await db.collection('users').findOne({ email });
     if (user && await bcrypt.compare(password, user.password)) {
       
       const token = jwt.sign(
-        { userId: user._id, username: user.username }, 
+        { userId: user._id, email: user.email }, 
         SECRET_KEY, 
         { expiresIn: '24h' } 
       );
@@ -34,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ message: 'Login successful', token });
     } else {
       
-      return res.status(401).json({ message: 'Invalid username or password' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
   } else {
     res.setHeader('Allow', ['POST']);

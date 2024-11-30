@@ -8,23 +8,22 @@ export default NextAuth({
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
         
-        if (!credentials?.username || !credentials?.password) {
+        if (!credentials?.email || !credentials?.password) {
           console.log('Missing credentials'); 
           return null;}
 
-        const user = await verifyUser(credentials.username);
-        console.log('User fetched:', user); 
+        const user = await verifyUser(credentials.email);
         
         if (user && await verifyPassword(credentials.password, user.password)) {
-          console.log('User authenticated successfully:', { id: user.id, username: user.username }); 
-          return { id: user._id.toString(), username: user.username }; 
+          console.log('User authenticated successfully:', { id: user.id, email: user.email }); 
+          return { id: user._id.toString(), email: user.email }; 
         } else {
-          console.log('Authentication failed for user:', user ? user.username : 'User not found'); 
+          console.log('Authentication failed for user:', user ? user.email : 'User not found'); 
           return null; 
         }
       }
@@ -35,14 +34,14 @@ export default NextAuth({
       
       if (user) {
         token.id = user.id; 
-        token.username = user.username; 
+        token.email = user.email; 
       }
       return token; 
     },
     async session({ session, token }) {
       
       session.id = token.id as string; 
-      session.username = token.username as string; 
+      session.email = token.email as string; 
       return session; 
     }
   },

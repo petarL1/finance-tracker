@@ -14,20 +14,20 @@ async function connectToDatabase() {
 }
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).json({ message: 'Username and password are required.' });
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
     }
     try {
       const db = await connectToDatabase();
-      const existingUser = await db.collection('users').findOne({ username });
+      const existingUser = await db.collection('users').findOne({ email });
       if (existingUser) {
-        return res.status(400).json({ message: 'Username already exists.' });
+        return res.status(400).json({ message: 'Email already exists.' });
       }
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = {
-        username,
+        email,
         password: hashedPassword,
       };
       const result = await db.collection('users').insertOne(newUser);

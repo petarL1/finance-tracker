@@ -1,4 +1,4 @@
-'use client';  
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -8,31 +8,39 @@ import { useAuth } from '../../context/AuthContext';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { session } = useAuth(); 
-  
-  
+  const [isClient, setIsClient] = useState(false); 
+  const { session } = useAuth();
+
   const navbarRef = useRef<HTMLDivElement | null>(null);
-  
-  
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-  
-  
+
   useEffect(() => {
+    
+    setIsClient(true);
+
     const handleClickOutside = (event: MouseEvent) => {
       if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    if (isClient) {
+      document.addEventListener('click', handleClickOutside);
+    }
 
-    
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      if (isClient) {
+        document.removeEventListener('click', handleClickOutside);
+      }
     };
-  }, []);
+  }, [isClient]); 
+
+  if (!isClient) {
+    return null; 
+  }
 
   return (
     <header className={styles.header} ref={navbarRef}>

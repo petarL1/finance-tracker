@@ -51,13 +51,14 @@
   color: white;
   text-decoration: none;
   font-size: 1.1rem;
+  font-weight: bold;
   padding: 1rem;
   display: block;
   transition: color 0.3s ease;
 }
 
 .nav ul li a:hover {
-  color: #0088cc;
+  color: #376591;
 }
 
 

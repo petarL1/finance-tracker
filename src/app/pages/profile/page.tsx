@@ -13,10 +13,11 @@ import { Transaction } from '../../../models/Transaction';
 import Pagination from './components/Pagination';
 import BalanceChart from './components/BalanceChart';
 import TransactionForm from './components/TransactionForm';
+import ProfileDropdown from './components/ProfileDropdown';
 
 interface UserSession {
   userId: string;
-  username: string;
+  email: string;
 }
 
 export interface BalanceDataPoint {
@@ -271,14 +272,11 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
   }, [transactions, selectedCurrency]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>Welcome, {user?.username}</h2>
-        <button className={styles.logoutButton} onClick={handleLogout}>
-          Logout
-        </button>
+    <>
+    <div className={styles.pageContainer}>
+      <ProfileDropdown/>
       </div>
-  
+    <div className={styles.trackerContainer}> 
       <div className={styles.dashboard}>
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Balance</h2>
@@ -349,6 +347,7 @@ const handleUpdateTransaction = async (transaction: Transaction) => {
         )}
       </div>
       </div>
+      </>
   );
 }
   export default Profile;

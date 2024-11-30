@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import jwt from 'jsonwebtoken';
 const SECRET_KEY = process.env.JWT_SECRET || 'mysecretkey';
 interface AuthenticatedRequest extends NextApiRequest {
-  user?: { userId: string; username: string };
+  user?: { userId: string; email: string };
 }
 export const authenticateToken = (req: AuthenticatedRequest, res: NextApiResponse, next: () => void) => {
   const token = req.cookies.token;
@@ -13,7 +13,7 @@ export const authenticateToken = (req: AuthenticatedRequest, res: NextApiRespons
     if (err) {
       return res.status(403).json({ message: 'Invalid token.' });
     }    
-    req.user = { userId: (user as any).userId, username: (user as any).username };    
+    req.user = { userId: (user as any).userId, email: (user as any).email };    
     next();
   });
 };

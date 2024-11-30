@@ -6,7 +6,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import dynamic from 'next/dynamic';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
-// Dynamically import Leaflet CSS to avoid SSR issues
 const DynamicMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const DynamicTileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 const DynamicMarker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
@@ -17,7 +16,6 @@ const Contact: React.FC = () => {
 
   useEffect(() => {
     setIsMounted(true);
-    // Leaflet icon setup only runs in the client
     if (typeof window !== 'undefined') {
       const L = require('leaflet');
       L.Icon.Default.mergeOptions({
@@ -29,7 +27,7 @@ const Contact: React.FC = () => {
   }, []);
 
   if (!isMounted) {
-    return null; // Prevent rendering until the component has mounted
+    return null; 
   }
 
   return (

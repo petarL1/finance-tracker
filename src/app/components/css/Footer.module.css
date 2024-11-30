@@ -23,7 +23,6 @@
 }
 
 .logoSection a{
-
   color: white;
   text-decoration: none;
   transition: color 0.3s;
@@ -32,7 +31,7 @@
 }
 
 .logoSection a:hover {
-  color: #0088cc;
+  color: #376591;
 }
 
 
@@ -59,8 +58,8 @@
 }
 
 .socialIcons a:hover {
-  color: #0088cc;
-  transform: scale(1.1);
+  color: #376591;
+  transform: scale(1.3);
 }
 
 .logoSection p,
@@ -85,7 +84,7 @@
 }
 
 .linksSection ul li a:hover {
-  color: #0088cc;
+  color: #376591;
 }
 
 .copyright {
