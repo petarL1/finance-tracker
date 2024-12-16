@@ -106,6 +106,7 @@ const RegisterPage = () => {
             />
             <button
               type="button"
+              tabIndex={-1}
               className={styles.showPasswordButton}
               onClick={toggleShowPassword}
             >

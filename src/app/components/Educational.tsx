@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ArticleModal from './ArticleModal';
 import styles from './css/Educational.module.css'; 
 import { Article } from '../../models/Article';
+import SkeletonCard from './SkeletonCard';
 
 const Educational: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -11,11 +12,17 @@ const Educational: React.FC = () => {
     references: [],
   });
   const [posts, setPosts] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchArticles = async () => {
+      try{
       const response = await fetch('/api/articles'); 
       const data = await response.json();
       setPosts(data);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchArticles();
@@ -37,7 +44,8 @@ const Educational: React.FC = () => {
     <section className={styles.blog}>
       <h2>Financial Tips & Insights</h2>
       <div className={styles.posts}>
-        {posts.map((post, index) => (
+      {isLoading? Array(5).fill(0).map((_,index)=> <SkeletonCard key={index}/>) :
+        posts.map((post, index) => (
           <div key={index} className={styles.post}>
             <h3>{post.title}</h3>
             <button onClick={() => openModal(post.slug, post.title)}>Read More</button>

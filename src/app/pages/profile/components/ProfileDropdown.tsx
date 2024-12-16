@@ -56,6 +56,7 @@ const ProfileDropdown: React.FC = () => {
       {isDropdownOpen && (  
         <div className={styles.dropdownMenu}>  
           <button className={styles.dropdownItem}>ENG/MKD - work in progress</button>
+          <button className={styles.dropdownItem}>Dark Mode - work in progress</button>
           <button onClick={handleLogout} className={styles.dropdownItem}>Logout</button>  
         </div>  
       )}  

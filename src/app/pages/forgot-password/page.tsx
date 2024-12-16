@@ -2,13 +2,16 @@
 
 import { useState } from 'react';
 import styles from './ForgotPassword.module.css'; 
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
+import { Router } from 'next/router';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

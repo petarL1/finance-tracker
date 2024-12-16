@@ -21,6 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ valid: false, message: 'Invalid or expired token' });
       }
 
+      const isSamePassword = await bcrypt.compare(password, user.password);
+      if (isSamePassword){
+        return res.status(400).json({ message: 'New password cannot be the same as the old password'});
+      }
       
       const hashedPassword = await bcrypt.hash(password, 12);
 

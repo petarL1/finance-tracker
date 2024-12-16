@@ -2,7 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
 import { MongoClient } from 'mongodb';
 
-const client = new MongoClient(process.env.MONGODB_URI!);
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error('MONGODB_URI is not defined in environment variables.');
+}
+
+const client = new MongoClient(MONGODB_URI);
 let db: any;
 
 async function connectToDatabase() {
@@ -21,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     try {
       const db = await connectToDatabase();
-      const existingUser = await db.collection('users').findOne({ email });
+      const existingUser = await db.collection('users').findOne({ email: String(email) });
       if (existingUser) {
         return res.status(400).json({ message: 'Email already exists.' });
       }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import zxcvbn from 'zxcvbn';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Import eye icons
+import { FaEye, FaEyeSlash } from 'react-icons/fa';  
 import styles from './ResetPassword.module.css';
 
 const ResetPassword = ({ searchParams }: { searchParams: { token?: string } }) => {
@@ -16,7 +16,6 @@ const ResetPassword = ({ searchParams }: { searchParams: { token?: string } }) =
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [strengthFeedback, setStrengthFeedback] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
   const token = searchParams.token;
@@ -66,10 +65,6 @@ const ResetPassword = ({ searchParams }: { searchParams: { token?: string } }) =
     setShowPassword(!showPassword);
   };
 
-  const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -111,11 +106,11 @@ const ResetPassword = ({ searchParams }: { searchParams: { token?: string } }) =
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className={styles.errorDiv}>Loading...</div>;
   }
 
   if (!tokenValid) {
-    return <div>Invalid or expired token. Please request a new password reset.</div>;
+    return <div className={styles.errorDiv}>Invalid or expired token. Please request a new password reset.</div>;
   }
 
   return (
@@ -138,6 +133,7 @@ const ResetPassword = ({ searchParams }: { searchParams: { token?: string } }) =
           />
           <button
             type="button"
+            tabIndex={-1}
             className={styles.showPasswordButton}
             onClick={toggleShowPassword}
           >
@@ -169,18 +165,11 @@ const ResetPassword = ({ searchParams }: { searchParams: { token?: string } }) =
         <div className={styles.passwordContainer}>
           <input
             id="confirmPassword"
-            type={showConfirmPassword ? 'text' : 'password'}
+            type={showPassword ? 'text' : 'password'}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             className={styles.resetPasswordInput}
           />
-          <button
-            type="button"
-            className={styles.showPasswordButton}
-            onClick={toggleShowConfirmPassword}
-          >
-            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-          </button>
         </div>
 
         <button type="submit" className={styles.resetPasswordButton}>

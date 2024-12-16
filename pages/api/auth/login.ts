@@ -6,7 +6,8 @@ import { MongoClient } from 'mongodb';
 const client = new MongoClient(process.env.MONGODB_URI!);
 let db: any;
 
-const SECRET_KEY = process.env.JWT_SECRET || 'mysecretkey'; 
+const SECRET_KEY = process.env.JWT_SECRET as string; 
+if (!SECRET_KEY) throw new Error(`JWT_SECRET isn't defined`);
 async function connectToDatabase() {
   if (!db) {
     await client.connect();
